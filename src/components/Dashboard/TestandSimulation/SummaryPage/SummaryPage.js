@@ -20,9 +20,14 @@ class SummaryPage extends Component {
   };
 
   componentDidMount() {
-    const { fetchUserScore, testInstances, userScores } = this.props;
-    if (this.props.testInstances) {
+    const { fetchUserScore, testInstances } = this.props;
+    if (testInstances && testInstances.id) {
       fetchUserScore(testInstances.id);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.userScores !== this.props.userScores) {
       this.setState({ loading: false });
     }
   }
@@ -33,6 +38,10 @@ class SummaryPage extends Component {
       newVisibility[index] = !newVisibility[index];
       return { visibility: newVisibility };
     });
+  };
+
+  handleReturnHome = () => {
+    this.props.navigate("/dashboard");
   };
 
   renderSection = (index, question, answer) => {
@@ -59,15 +68,22 @@ class SummaryPage extends Component {
     }
     const { userScores } = this.props;
 
+    if (
+      !userScores ||
+      !userScores.correct_questions ||
+      !userScores.incorrect_questions
+    ) {
+      return <div>No score data available</div>;
+    }
+
     // Prepare sections from incorrect questions
-    const sections =
-      userScores.incorrect_questions?.map((item, index) => {
-        const correctOptionKey = `option_${item.answer}`;
-        return {
-          question: item.question,
-          answer: `Correct answer: ${item[correctOptionKey]} (${item.answer})`,
-        };
-      }) || [];
+    const sections = userScores.incorrect_questions.map((item, index) => {
+      const correctOptionKey = `option_${item.answer}`;
+      return {
+        question: item.question,
+        answer: `Correct answer: ${item[correctOptionKey]} (${item.answer})`,
+      };
+    });
 
     return (
       <div className="flex w-screen h-screen">
@@ -79,7 +95,7 @@ class SummaryPage extends Component {
             <div className="flex w-[19.75rem] h-[19.75rem] rounded-[50%] justify-center items-center border-white border-[9px]">
               <div>
                 <div className="font-[700] text-[6rem] text-center leading-[8.171rem]">
-                  {userScores.correct_questions?.length}
+                  {userScores.correct_questions.length}
                 </div>
                 <div className="font-[600] text-[2.5rem] leading-[3.404rem]">
                   OF {userScores.total_questions}
@@ -90,6 +106,12 @@ class SummaryPage extends Component {
           <div className="font-[500] text-[1.5rem] w-[23.625rem] text-center lead-[2.043rem]">
             Average, Try again to understand concepts
           </div>
+          <button
+            onClick={this.handleReturnHome}
+            className="flex items-center justify-center font-[700] text-[1.5rem] bg-skyblue-secondary border-none w-[13.75rem] h-[4.25rem] rounded-[0.438rem] text-center"
+          >
+            Return Home
+          </button>
         </div>
         <div className="flex w-full h-full justify-end">
           <div className="w-[65%] h-screen">
@@ -106,7 +128,7 @@ class SummaryPage extends Component {
                 <div className="flex flex-col font-[600] text-[1rem] gap-[0.625rem] leading-[1.362rem]">
                   <div>
                     Total Number of Incorrect questions answered:{" "}
-                    {userScores.correct_questions?.length}
+                    {userScores.correct_questions.length}
                   </div>
                   <div>View all</div>
                 </div>
@@ -121,7 +143,7 @@ class SummaryPage extends Component {
                 <div className="flex flex-col font-[600] text-[1rem] gap-[0.625rem] leading-[1.362rem]">
                   <div>
                     Total Number of Correct questions answered:{" "}
-                    {userScores.incorrect_questions?.length}
+                    {userScores.incorrect_questions.length}
                   </div>
                   <div>View all</div>
                 </div>
