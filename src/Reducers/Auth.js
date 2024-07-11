@@ -7,6 +7,8 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  PASSWORD_RESET_SUCCESS,
+  PASSWORD_RESET_FAILED,
 } from "../Actions/Types";
 
 const initialState = {
@@ -14,6 +16,7 @@ const initialState = {
   isAuthenticated: null,
   isLoading: false,
   user: null,
+  resetStatus: null,
 };
 
 export default function (state = initialState, action) {
@@ -31,6 +34,13 @@ export default function (state = initialState, action) {
         user: action.payload,
       };
     case LOGIN_SUCCESS:
+      localStorage.setItem("token", action.payload.token);
+      return {
+        ...state,
+        ...action.payload,
+        isAuthenticated: true,
+        isLoading: false,
+      };
     case REGISTER_SUCCESS:
       localStorage.setItem("token", action.payload.token);
       return {
@@ -66,6 +76,18 @@ export default function (state = initialState, action) {
         user: null,
         isAuthenticated: false,
         isLoading: false,
+      };
+    case PASSWORD_RESET_SUCCESS:
+      return {
+        ...state,
+        isAuthenticated: false,
+        resetStatus: 'success'
+      };
+    case PASSWORD_RESET_FAILED:
+      return {
+        ...state,
+        isAuthenticated: false,
+        resetStatus: 'failed'
       };
     default:
       return state;
