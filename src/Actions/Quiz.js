@@ -30,7 +30,9 @@ import {
   RESET_QUESTIONS_ON_LEAVE_PAGE,
 } from "./Types";
 
-const baseurl = "https://kaput-cannon-obedient-walk-production.pipeops.app";
+// const baseurl = "https://kaput-cannon-obedient-walk-production.pipeops.app";
+const baseurl = "http://127.0.0.1:8000";
+
 
 // Action to start a test
 export const startTest =
