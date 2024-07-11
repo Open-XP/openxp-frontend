@@ -1,3 +1,4 @@
+// import axios from "./AxiosConfig";
 import axios from "axios";
 import { returnErrors } from "./Messages";
 import {
@@ -10,9 +11,12 @@ import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
   LOGOUT_FAILED,
+  PASSWORD_RESET_SUCCESS,
+  PASSWORD_RESET_FAILED,
 } from "./Types";
 
-const baseurl = "https://kaput-cannon-obedient-walk-production.pipeops.app";
+// const baseurl = "https://kaput-cannon-obedient-walk-production.pipeops.app";
+const baseurl = "http://127.0.0.1:8000";
 
 // CHECK TOKEN & LOAD USER
 export const loadUser = () => (dispatch, getState) => {
@@ -128,3 +132,63 @@ export const tokenConfig = (getState) => {
 
   return config;
 };
+
+export const resetpassword = (email) => (dispatch) => {
+  // Headers
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  // Request Body
+  const body = JSON.stringify({ email });
+
+  axios
+    .post(`${baseurl}/api/auth/user/reset-password/`, body, config)
+    .then((res) => {
+      dispatch({
+        type: PASSWORD_RESET_SUCCESS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+      dispatch({
+        type: PASSWORD_RESET_FAILED,
+      });
+    });
+};
+
+// CONFIRM PASSWORD RESET
+export const confirmPassword =
+  (uidb64, token, password, confirm_password) => (dispatch) => {
+    // Headers
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    
+    // Request Body
+    const body = JSON.stringify({ password, confirm_password });
+
+    axios
+      .post(
+        `${baseurl}/api/auth/user/password-reset-confirm/${uidb64}/${token}/`,
+        body,
+        config
+      )
+      .then((res) => {
+        dispatch({
+          type: PASSWORD_RESET_SUCCESS,
+          payload: res.data,
+        });
+      })
+      .catch((err) => {
+        dispatch(returnErrors(err.response.data, err.response.status));
+        dispatch({
+          type: PASSWORD_RESET_FAILED,
+        });
+      });
+  };
