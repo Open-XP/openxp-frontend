@@ -12,6 +12,7 @@ class SummaryPage extends Component {
     navigate: PropTypes.func.isRequired,
     fetchUserScore: PropTypes.func.isRequired,
     userScores: PropTypes.object.isRequired,
+    completedTestResponse: PropTypes.object.isRequired,
   };
 
   state = {
@@ -20,9 +21,13 @@ class SummaryPage extends Component {
   };
 
   componentDidMount() {
-    const { fetchUserScore, testInstances } = this.props;
-    if (testInstances && testInstances.id) {
-      fetchUserScore(testInstances.id);
+    const { fetchUserScore, testInstances, completedTestResponse } = this.props;
+    if (completedTestResponse) {
+      this.setState({ loading: true }, () => {
+        fetchUserScore(testInstances.id).finally(() => {
+          this.setState({ loading: false });
+        });
+      });
     }
   }
 
@@ -40,8 +45,9 @@ class SummaryPage extends Component {
     });
   };
 
-  handleReturnHome = () => {
-    this.props.navigate("/dashboard");
+  returnHome = () => {
+    const { navigate } = this.props;
+    navigate("/dashboard");
   };
 
   renderSection = (index, question, answer) => {
@@ -68,11 +74,7 @@ class SummaryPage extends Component {
     }
     const { userScores } = this.props;
 
-    if (
-      !userScores ||
-      !userScores.correct_questions ||
-      !userScores.incorrect_questions
-    ) {
+    if (!userScores || !userScores.correct_questions || !userScores.incorrect_questions) {
       return <div>No score data available</div>;
     }
 
@@ -106,10 +108,7 @@ class SummaryPage extends Component {
           <div className="font-[500] text-[1.5rem] w-[23.625rem] text-center lead-[2.043rem]">
             Average, Try again to understand concepts
           </div>
-          <button
-            onClick={this.handleReturnHome}
-            className="flex items-center justify-center font-[700] text-[1.5rem] bg-skyblue-secondary border-none w-[13.75rem] h-[4.25rem] rounded-[0.438rem] text-center"
-          >
+          <button onClick={this.returnHome} className="w-[13.75rem] h-[4.25rem] bg-skyblue-secondary font-[700] text-[1.5rem] rounded-[0.438rem] flex items-center justify-center">
             Return Home
           </button>
         </div>
@@ -165,6 +164,7 @@ class SummaryPage extends Component {
 const mapStateToProps = (state) => ({
   testInstances: state.quiz.testInstances,
   userScores: state.quiz.userScores,
+  completedTestResponse: state.quiz.completedTestResponse,
 });
 
 const mapDispatchToProps = {
