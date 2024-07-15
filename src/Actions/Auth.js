@@ -13,6 +13,8 @@ import {
   LOGOUT_FAILED,
   PASSWORD_RESET_SUCCESS,
   PASSWORD_RESET_FAILED,
+  PASSWORD_RESET_SENT,
+  PASSWORD_RESET_NOT_SENT,
 } from "./Types";
 
 // const baseurl = "https://kaput-cannon-obedient-walk-production.pipeops.app";
@@ -116,23 +118,7 @@ export const logout = () => (dispatch, getState) => {
     });
 };
 
-// Setup config with token - helper function
-export const tokenConfig = (getState) => {
-  const token = getState().auth.token;
-
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-
-  if (token) {
-    config.headers["Authorization"] = `Token ${token}`;
-  }
-
-  return config;
-};
-
+// RESET PASSWORD
 export const resetpassword = (email) => (dispatch) => {
   // Headers
   const config = {
@@ -148,14 +134,14 @@ export const resetpassword = (email) => (dispatch) => {
     .post(`${baseurl}/api/auth/user/reset-password/`, body, config)
     .then((res) => {
       dispatch({
-        type: PASSWORD_RESET_SUCCESS,
-        payload: res.data,
+        type: PASSWORD_RESET_SENT,
+        payload: res.data.message,
       });
     })
     .catch((err) => {
       dispatch(returnErrors(err.response.data, err.response.status));
       dispatch({
-        type: PASSWORD_RESET_FAILED,
+        type: PASSWORD_RESET_NOT_SENT,
       });
     });
 };
@@ -182,7 +168,7 @@ export const confirmPassword =
       .then((res) => {
         dispatch({
           type: PASSWORD_RESET_SUCCESS,
-          payload: res.data,
+          payload: res.data.message,
         });
       })
       .catch((err) => {
@@ -192,3 +178,20 @@ export const confirmPassword =
         });
       });
   };
+
+// Setup config with token - helper function
+export const tokenConfig = (getState) => {
+  const token = getState().auth.token;
+
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  if (token) {
+    config.headers["Authorization"] = `Token ${token}`;
+  }
+
+  return config;
+};
