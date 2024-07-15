@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-// Import components
+import ToastNotification from "./Utils/PopUpMessage.js";
 import LandingPage from "./components/LandingPage/LandingPage.js";
 import SignUpPage from "./Pages/Accounts/SignUpPage.js";
 import PrivateRoute from "./Pages/DashBoard/PrivateRoute.js";
@@ -14,6 +14,7 @@ import PasswordResetSent from "./Pages/PasswordReset/PasswordResetSent.js";
 function App() {
   return (
     <div>
+    <ToastNotification />
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
