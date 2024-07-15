@@ -22,7 +22,6 @@ class Evaluation extends Component {
     deleteTestInstance: PropTypes.func.isRequired,
     completeTest: PropTypes.func.isRequired,
     resetStateOnLeavePage: PropTypes.func.isRequired,
-    navigate: PropTypes.func.isRequired,
     submitAnswer: PropTypes.func.isRequired,
   };
 
@@ -33,6 +32,7 @@ class Evaluation extends Component {
     nextIndex: 0,
     remainingTime: null,
     selectedOptions: {},
+    showSummary: false,
   };
 
   timerInterval = null;
@@ -145,8 +145,12 @@ class Evaluation extends Component {
     const { testInstances } = this.props;
     if (testInstances && testInstances.id && shouldComplete) {
       this.props.completeTest(testInstances.id);
-      this.props.navigate("/dashboard/summary");
+      this.setState({ showSummary: true });
     }
+  };
+
+  handRedirectToSummaryPage = () => {
+    this.props.navigate("/dashboard/summary");
   };
 
   handleTimesUp = () => {
@@ -205,12 +209,12 @@ class Evaluation extends Component {
     const { subjectQuestions, testInstances } = this.props;
     const totalQuestions = subjectQuestions.length;
     const displayIndex = this.state.currentQuestionIndex + 1;
-    const { remainingTime } = this.state;
+    const { remainingTime, showSummary } = this.state;
     const minutes = Math.floor(remainingTime / 60);
     const seconds = remainingTime % 60;
 
     return (
-      <div className=" flex flex-col w-screen h-screen">
+      <div className="flex flex-col w-screen h-screen">
         <div className="flex w-screen justify-center shadow-xl">
           <div className="flex flex-row w-[80%] h-[6.375rem] justify-between items-center">
             <div className="flex gap-4 items-center">
@@ -250,7 +254,9 @@ class Evaluation extends Component {
               <button
                 className="bg-[#BBE6FF] w-[12.25rem] h-[4.5rem] rounded-lg font-[700] text-[1.5rem]"
                 onClick={() => {
-                  if (
+                  if (showSummary) {
+                    this.handRedirectToSummaryPage();
+                  } else if (
                     this.state.currentQuestionIndex ===
                     this.props.subjectQuestions.length - 1
                   ) {
@@ -261,8 +267,10 @@ class Evaluation extends Component {
                 }}
                 disabled={this.state.loading}
               >
-                {this.state.currentQuestionIndex ===
-                this.props.subjectQuestions.length - 1
+                {showSummary
+                  ? "Check Summary"
+                  : this.state.currentQuestionIndex ===
+                    this.props.subjectQuestions.length - 1
                   ? "Submit"
                   : "Next"}
               </button>
