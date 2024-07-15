@@ -4,21 +4,44 @@ import { Link } from "react-router-dom";
 import { withRouterHooks } from "../../withRouters/withRoutersHook";
 import PropTypes from "prop-types";
 import { resetpassword } from "../../Actions/Auth";
+import PopUpNotification from "../../Utils/PopUpMessage";
 
 export class PasswordResetPage extends Component {
+  static propTypes = {
+    resetpassword: PropTypes.func.isRequired,
+    passwordSent: PropTypes.string,
+  };
+
   state = {
     email: "",
   };
 
-  static propTypes = {
-    resetpassword: PropTypes.func.isRequired,
-  };
+
+
+  
+
+// componentDidUpdate(prevProps) {
+//     console.log("Current passwordSent:", this.props.passwordSent);
+//     console.log("Previous passwordSent:", prevProps.passwordSent);
+//     if (this.props.passwordSent !== prevProps.passwordSent) {
+//         if (this.props.passwordSent === "We have sent you a link to reset your password") {
+//             PopUpNotification("We have sent you a link to reset your password");
+//             this.props.navigate("/password-reset-sent");
+//         }
+//     }
+// }
 
   onSubmit = (e) => {
     const { navigate } = this.props;
     e.preventDefault();
     this.props.resetpassword(this.state.email);
-    navigate("/password-reset-sent");
+  };
+
+  redirectMe = () => {
+    const { passwordSent } = this.props
+    if (passwordSent === "We have sent you a link to reset your password") {
+      this.props.navigate("/password-reset-sent");
+    }
   };
 
   onChange = (e) => this.setState({ [e.target.name]: e.target.value });
@@ -65,6 +88,7 @@ export class PasswordResetPage extends Component {
                 </div>
                 <div className="flex flex-col gap-[1.625rem]">
                   <button
+                    redirectMe={this.redirectMe}
                     onSubmit={this.onSubmit}
                     className="w-[14.438rem] h-[3.438rem] font-sans font-[700] text-[1.438rem] leading-[2.043rem] bg-[#D9D9D952] bg-opacity-32 rounded-xl hover:bg-skyblue-secondary"
                   >
@@ -91,7 +115,7 @@ export class PasswordResetPage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth?.isAuthenticated,
+  passwordSent: state.auth?.passwordSent,
 });
 
 export default withRouterHooks(
