@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import Schedule from "../Schedule/schedule";
 import { fetchTotalStudyTime } from "../../../../Actions/Quiz";
 
 export class DashboardHome extends Component {
@@ -28,6 +29,9 @@ export class DashboardHome extends Component {
               alt="Medal Icon"
             />
             <div>Rookie</div>
+          </div>
+          <div>
+            <Schedule />
           </div>
           <div className="flex flex-col 2xl:flex-row 2xl:h-[28rem] gap-10 p-5 h-[100rem]">
             <div className="w-full 2xl:w-1/3 h-100 rounded-2xl bg-[#2D9CDB] font-bold text-2xl text-white text-center flex flex-col justify-center items-center gap-3">
