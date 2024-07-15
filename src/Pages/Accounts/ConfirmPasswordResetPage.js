@@ -22,17 +22,13 @@ class ConfirmPasswordResetPage extends Component {
     navigate: PropTypes.func.isRequired,
   };
 
-  componentDidMount() {
-    console.log("Props: ", this.props);
-  }
-
   componentDidUpdate(prevProps) {
-    if (prevProps.resetStatus !== this.props.resetStatus && this.props.resetStatus === "success") {
-      this.props.createMessage({
-        passwordReset: "Password Reset Successful",
-      });
-      
-      this.props.navigate('/login');
+    console.log(this.props.resetStatus, prevProps.resetStatus)  
+    if (this.props.resetStatus !== prevProps.resetStatus) {
+      if (this.props.resetStatus === "Password has been reset successfully.") {
+        console.log("Password has been reset successfully.")
+        this.props.navigate("/login");
+      }
     }
   }
 
