@@ -189,21 +189,24 @@ export const fetchAllTestInstances = () => (dispatch, getState) => {
 
 // Action to get user score
 export const fetchUserScore = (test_instance_id) => (dispatch, getState) => {
-  axios
-    .get(
-      `${baseurl}/api/quiz/exams/user-score/${test_instance_id}/`,
-      tokenConfig(getState)
-    )
-    .then((res) =>
-      dispatch({
-        type: FETCH_USER_SCORE_SUCCESS,
-        payload: res.data,
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${baseurl}/api/quiz/exams/user-score/${test_instance_id}/`, tokenConfig(getState))
+      .then((res) => {
+        dispatch({
+          type: FETCH_USER_SCORE_SUCCESS,
+          payload: res.data,
+        });
+        console.log('fetchUserScore SUCCESS:', res.data); // Debugging
+        resolve(res.data);
       })
-    )
-    .catch((err) => {
-      dispatch(returnErrors(err.response.data, err.response.status));
-      dispatch({ type: FETCH_USER_SCORE_FAIL });
-    });
+      .catch((err) => {
+        dispatch(returnErrors(err.response.data, err.response.status));
+        dispatch({ type: FETCH_USER_SCORE_FAIL });
+        console.log('fetchUserScore FAIL:', err); // Debugging
+        reject(err);
+      });
+  });
 };
 
 // Action to get test results
