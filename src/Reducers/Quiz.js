@@ -29,7 +29,7 @@ import {
 } from "../Actions/Types";
 
 const initialState = {
-  testInstances: {},
+  completedTestResponse: null,
   completedTests: [],
   allTests: null,
   individualQuestion: {},
@@ -80,7 +80,7 @@ export default function (state = initialState, action) {
     case COMPLETE_TEST_SUCCESS:
       return {
         ...state,
-        testInstance: action.payload,
+        completedTestResponse: action.payload,
         error: null,
       };
     case FETCH_COMPLETED_TESTS_SUCCESS:
