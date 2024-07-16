@@ -94,8 +94,9 @@ class SideBar extends Component {
       id: 6,
       title: "Study Planner",
       Icon: PuzzlePieceIcon,
-      Arrow: LockClosedIcon,
+      Arrow: "none",
       rotate: false,
+      link: "/dashboard/schedule-plan",
     },
     {
       id: 7,
