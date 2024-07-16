@@ -34,11 +34,11 @@ class Schedule extends Component {
     const dayDiff = timeDiff / (1000 * 60 * 60 * 24);
 
     if (dayDiff <= 7) {
-      return "bg-red-500";
+      return "bg-[#EA4335]";
     } else if (dayDiff <= 30) {
-      return "bg-blue-500";
+      return "bg-skyblue-secondary";
     } else {
-      return "bg-green-500";
+      return "bg-[#217A53]";
     }
   };
 
@@ -46,7 +46,6 @@ class Schedule extends Component {
     const currentTime = new Date();
     const examTime = new Date(examDate);
 
-    // Set the time of both dates to the beginning of the day for accurate difference calculation
     currentTime.setHours(0, 0, 0, 0);
     examTime.setHours(0, 0, 0, 0);
 
@@ -65,12 +64,10 @@ class Schedule extends Component {
   render() {
     const { upcomingExams, loading } = this.state;
 
-    // Sort the exams by date
     const sortedExams = [...upcomingExams].sort(
       (a, b) => new Date(a.date) - new Date(b.date)
     );
 
-    // Get the two most current exams
     const recentExams = sortedExams.slice(0, 2);
 
     if (upcomingExams.length === 0) {
@@ -93,7 +90,7 @@ class Schedule extends Component {
 
     return (
       <div className="flex flex-col gap-4 pt-4 pl-[3rem]">
-        <div className="flex justify-between w-[89%] 2xl:w-[39.5rem]">
+        <div className="flex justify-between w-[87%] 2xl:w-[47rem]">
           <div className="font-[700] text-[1.5rem] leading-[2.043rem]">
             Upcoming Exams
           </div>
@@ -101,11 +98,14 @@ class Schedule extends Component {
             <Link className="text-purple-primary">View all</Link>
           </div>
         </div>
-        <div className="flex gap-4">
+        <div className="flex 2xl:flex-row flex-col gap-4">
           {recentExams.map((exam) => (
-            <div className="flex w-[18.938rem] h-[5.813rem]" key={exam.id}>
+            <div
+              className="flex 2xl:w-[22.938rem] w-[54rem] 2xl:h-[5.813rem] h-[10rem]"
+              key={exam.id}
+            >
               <div
-                className={`flex justify-center items-center text-white flex-wrap w-[6.813rem] h-[5.813rem] rounded-l font-[700] text-[1.5rem] leading-[2.043rem] ${this.assignColor(
+                className={`flex justify-center items-center text-white flex-wrap w-[10rem] 2xl:w-[6.813rem] 2xl:h-[5.813rem] h-[100%] rounded-l font-[700] text-[1.5rem] leading-[2.043rem] ${this.assignColor(
                   exam.date
                 )}`}
               >
