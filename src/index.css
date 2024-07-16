@@ -2,22 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 
 .divIndicator {
-    transition: visibility 0.3s, opacity 0.3s ease;
-    visibility: hidden;  /* starts as hidden */
-    opacity: 0;          /* starts as fully transparent */
-  }
-  
-  .divIndicator.visible {
-    visibility: visible;
-    opacity: 1;
-  }
-  
-  .rotateIcon {
-    transition: transform 200ms ease-in-out;
-  }
+  transition: visibility 0.3s, opacity 0.3s ease;
+  visibility: hidden; /* starts as hidden */
+  opacity: 0; /* starts as fully transparent */
+}
 
+.divIndicator.visible {
+  visibility: visible;
+  opacity: 1;
+}
 
-
-  
+.rotateIcon {
+  transition: transform 200ms ease-in-out;
+}
