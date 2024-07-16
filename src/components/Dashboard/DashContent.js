@@ -7,6 +7,7 @@ import Void from "./DashBoardSideBar/void";
 import MockExam from "../../components/Dashboard/TestandSimulation/MockExams/MockExam";
 import Evaluation from "../../components/Dashboard/TestandSimulation/EvaluationScreen/Evaluation";
 import SummaryPage from "./TestandSimulation/SummaryPage/SummaryPage";
+import SchedulePlan from "./SchedulePlan/SchedulePlan";
 
 export function DashContent() {
   return (
@@ -36,6 +37,21 @@ export function DashContent() {
                 <Void />
                 <div className="flex w-full justify-center mt-[10rem]">
                   <MockExam />
+                </div>
+              </div>
+              <SideBar />
+            </div>
+          }
+        />
+        <Route
+          path="/schedule-plan"
+          element={
+            <div>
+              <DashboardNavBar className="-mt" />
+              <div className="flex">
+                <Void />
+                <div className="flex w-full justify-center mt-[10rem]">
+                  <SchedulePlan />
                 </div>
               </div>
               <SideBar />
