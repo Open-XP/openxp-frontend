@@ -66,7 +66,9 @@ class Schedule extends Component {
             Upcoming Exams
           </div>
           <div className="font-[400] text-[1.5rem] leading-[2.043rem]">
-            <Link className="text-purple-primary">View all</Link>
+            <Link to="/dashboard/schedule-plan" className="text-purple-primary">
+              View all
+            </Link>
           </div>
         </div>
         <div className="flex 2xl:flex-row flex-col gap-4">
