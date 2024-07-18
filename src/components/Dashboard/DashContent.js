@@ -8,6 +8,7 @@ import MockExam from "../../components/Dashboard/TestandSimulation/MockExams/Moc
 import Evaluation from "../../components/Dashboard/TestandSimulation/EvaluationScreen/Evaluation";
 import SummaryPage from "./TestandSimulation/SummaryPage/SummaryPage";
 import SchedulePlan from "./SchedulePlan/SchedulePlan";
+import AddSchedule from "./SchedulePlan/ScheduleComponent/AddSchedule";
 
 export function DashContent() {
   return (
@@ -52,6 +53,21 @@ export function DashContent() {
                 <Void />
                 <div className="flex w-full justify-center mt-[10rem]">
                   <SchedulePlan />
+                </div>
+              </div>
+              <SideBar />
+            </div>
+          }
+        />
+        <Route
+          path="/schedule-plan/create"
+          element={
+            <div>
+              <DashboardNavBar className="" />
+              <div className="flex">
+                <Void />
+                <div className="flex w-full justify-center mt-[8rem]">
+                  <AddSchedule />
                 </div>
               </div>
               <SideBar />
