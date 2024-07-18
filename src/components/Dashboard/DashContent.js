@@ -74,6 +74,21 @@ export function DashContent() {
             </div>
           }
         />
+        <Route
+          path="/schedule-plan/edit"
+          element={
+            <div>
+              <DashboardNavBar className="" />
+              <div className="flex">
+                <Void />
+                <div className="flex w-full justify-center mt-[8rem]">
+                  <AddSchedule />
+                </div>
+              </div>
+              <SideBar />
+            </div>
+          }
+        />
         <Route path="/mock-exam/evaluation/:id" element={<Evaluation />} />
         <Route path="/summary" element={<SummaryPage />} />
       </Routes>
