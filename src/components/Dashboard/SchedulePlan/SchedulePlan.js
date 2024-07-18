@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { render } from "@testing-library/react";
-import AddScheduleButton from "./ScheduleComponent/AddSchedule";
+import AddScheduleButton from "./ScheduleComponent/AddScheduleButton";
 import NoSchedule from "./ScheduleComponent/NoSchedule";
 import EditIcon from "../../../icons/edit-icon.png";
 import { assignColor, daysLeft, formatDate } from "../../../Utils/AutoStyling";
@@ -78,7 +78,7 @@ class SchedulePlan extends Component {
                     {exam.name}
                   </div>
                   <div
-                    className={`flex w-fit h-fix p-2 rounded-[1.688rem] text-[1.5rem]  text-white  ${assignColor(
+                    className={`flex w-fit h-fix px-4 p-2 rounded-[1.688rem] text-[1.5rem]  text-white  ${assignColor(
                       exam.date
                     )}`}
                   >
