@@ -13,6 +13,7 @@ class AddSchedule extends Component {
 
   static propTypes = {
     navigate: PropTypes.func.isRequired,
+    location: PropTypes.func.isRequired,
   };
 
   ReturnToSchedule = () => {
@@ -36,6 +37,12 @@ class AddSchedule extends Component {
   render() {
     const { isDescriptionFocused, description } = this.state;
 
+    const { location } = this.props;
+    const HeaderText =
+      location.pathname === "/dashboard/schedule-plan/edit"
+        ? "Edit Schedule"
+        : "Add Schedule";
+
     return (
       <div className="flex flex-col w-[95%] font-inter my-4 gap-[3rem] p-8">
         <div className="flex gap-4 items-center">
@@ -45,7 +52,7 @@ class AddSchedule extends Component {
             </div>
           </button>
           <div className="flex justify-center items-center font-[700] text-[2rem] 2xl:text-[3.375rem]">
-            Add Schedule
+            {HeaderText}
           </div>
         </div>
         <div>
@@ -70,6 +77,8 @@ class AddSchedule extends Component {
             <input
               className="w-[15.125rem] h-[3.813rem] text-[1.5rem] border-2 rounded-[3.813rem]"
               type="date"
+              onFocus={this.handleDescriptionFocus}
+              onBlur={this.handleDescriptionBlur}
             />
           </div>
           <div className="flex w-[4rem] h-[2rem] items-center mt-[1.8rem]">
@@ -83,9 +92,9 @@ class AddSchedule extends Component {
             />
           </div>
         </div>
-        <div className="relative">
+        <div className="flex relative">
           {!isDescriptionFocused && description.trim() === "" && (
-            <div className="flex items-center absolute p-2 gap-2">
+            <div className="flex items-center absolute p-[1rem] gap-2 -z-10">
               <img
                 className="w-[2rem] h-[2rem]"
                 src={WriteIcon}
@@ -94,7 +103,7 @@ class AddSchedule extends Component {
               <div className="font-[400] text-[1.5rem]">Add Description</div>
             </div>
           )}
-          <textarea
+          <input
             className="w-full h-[10rem] border-2 rounded-[0.875rem]"
             placeholder=""
             onFocus={this.handleDescriptionFocus}
@@ -102,6 +111,11 @@ class AddSchedule extends Component {
             onChange={this.handleDescriptionChange}
             value={description}
           />
+        </div>
+        <div className="flex justify-end">
+          <button className="flex justify-center items-center w-[13.375rem] h-[3.438rem] bg-purple-primary rounded-[0.438rem] text-white font-[600] text-lg 2xl:text-[2.25rem] leading-[2.043rem]">
+            <div>Save</div>
+          </button>
         </div>
       </div>
     );
