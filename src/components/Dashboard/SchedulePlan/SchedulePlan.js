@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { render } from "@testing-library/react";
-import AddSchedule from "./ScheduleComponent/AddSchedule";
+import AddScheduleButton from "./ScheduleComponent/AddSchedule";
 import NoSchedule from "./ScheduleComponent/NoSchedule";
+import EditIcon from "../../../icons/edit-icon.png";
 import { assignColor, daysLeft, formatDate } from "../../../Utils/AutoStyling";
 
 class SchedulePlan extends Component {
@@ -12,18 +13,21 @@ class SchedulePlan extends Component {
         name: "Mathematics",
         date: "2024-07-25",
         exam: "waec",
+        time: "10:00",
       },
       {
         id: 2,
         name: "Physics",
         date: "2024-09-25",
         exam: "waec",
+        time: "12:00",
       },
       {
         id: 3,
         name: "Chemistry",
-        date: "2024-07-15",
+        date: "2024-07-18",
         exam: "waec",
+        time: "14:00",
       },
     ],
     loading: true,
@@ -40,7 +44,7 @@ class SchedulePlan extends Component {
               <div className="flex justify-center items-center font-bold text-2xl 2xl:text-[3.375rem]">
                 Schedule Exam
               </div>
-              <AddSchedule />
+              <AddScheduleButton />
             </div>
             <NoSchedule />
           </div>
@@ -49,41 +53,53 @@ class SchedulePlan extends Component {
     }
 
     return (
-      <div>
+      <div className="w-[90%] font-sans">
         <div className="flex justify-between mb-4">
           <div className="flex justify-center items-center font-bold text-2xl 2xl:text-[3.375rem]">
             Schedule Exam
           </div>
-          <AddSchedule />
+          <AddScheduleButton />
         </div>
-        <div className="flex 2xl:flex-row flex-col gap-4">
+        <div className="flex flex-col gap-10">
           {upcomingExams.map((exam) => (
-            <div
-              className="flex 2xl:w-[22.938rem] w-[54rem] 2xl:h-[5.813rem] h-[10rem]"
-              key={exam.id}
-            >
+            <div className="flex w-full 2xl:h-[15rem] h-[10rem]" key={exam.id}>
               <div
-                className={`flex justify-center items-center text-white flex-wrap w-[10rem] 2xl:w-[6.813rem] 2xl:h-[5.813rem] h-[100%] rounded-l font-[700] text-[1.5rem] leading-[2.043rem] ${assignColor(
+                className={`flex justify-center items-center text-white flex-wrap w-[10rem] 2xl:w-[15rem] 2xl:h-full h-[100%] rounded-l font-[700] text-[1.5rem] 2xl:text-[3rem] 2xl:leading-[4.086rem] leading-[2.043rem] text-center ${assignColor(
                   exam.date
                 )}`}
               >
-                <div className="w-[2.813rem] h-[4.125rem]">
+                <div className="w-[2.9065rem] h-[4.125rem] 2xl:w-[5.813rem] 2xl:h-[8.25rem]">
                   {formatDate(exam.date)}
                 </div>
               </div>
               <div className="flex flex-col justify-evenly w-[100%] leading-[1.362rem] text-[1rem] border-t-2 border-r-2 border-b-2 rounded-r-[0.5rem] pl-4 relative">
-                <div>{exam.name}</div>
-                <div className="font-[700]">{exam.exam}</div>
-                <div
-                  className={`flex w-fit px-2 rounded-[1.688rem] text-white absolute right-4 bottom-4 ${assignColor(
-                    exam.date
-                  )}`}
-                >
-                  {daysLeft(exam.date) === 0
-                    ? "Today"
-                    : daysLeft(exam.date) === 1
-                    ? "Tomorrow"
-                    : `${daysLeft(exam.date)} days left`}
+                <div className="flex flex-row justify-between pr-14">
+                  <div className="2xl:text-[2.5rem] text-[1.5rem] font-[600]">
+                    {exam.name}
+                  </div>
+                  <div
+                    className={`flex w-fit h-fix p-2 rounded-[1.688rem] text-[1.5rem]  text-white  ${assignColor(
+                      exam.date
+                    )}`}
+                  >
+                    {daysLeft(exam.date) === 0
+                      ? "Today by " + exam.time
+                      : daysLeft(exam.date) === 1
+                      ? "Tomorrow"
+                      : `${daysLeft(exam.date)} days left`}
+                  </div>
+                </div>
+                <div className="flex justify-between pr-14">
+                  <div className="font-[700] 2xl:text-[2.5rem] text-[1.5rem]">
+                    {exam.exam}
+                  </div>
+                  <button>
+                    <img
+                      src={EditIcon}
+                      alt="Edit Icon"
+                      className="w-[1.5rem] 2xl:w-[2.5rem] h-[1.5rem] 2xl:h-[2.5rem]"
+                    />
+                  </button>
                 </div>
               </div>
             </div>
