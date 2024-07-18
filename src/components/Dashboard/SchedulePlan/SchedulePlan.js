@@ -1,9 +1,11 @@
 import React, { Component } from "react";
-import { render } from "@testing-library/react";
 import AddScheduleButton from "./ScheduleComponent/AddScheduleButton";
 import NoSchedule from "./ScheduleComponent/NoSchedule";
-import EditIcon from "../../../icons/edit-icon.png";
+import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 import { assignColor, daysLeft, formatDate } from "../../../Utils/AutoStyling";
+import PropTypes from "prop-types";
+import { withRouterHooks } from "../../../withRouters/withRoutersHook";
+import ScheduleEditAndDelete from "./ScheduleComponent/ScheduleEditAndDelete";
 
 class SchedulePlan extends Component {
   state = {
@@ -25,16 +27,34 @@ class SchedulePlan extends Component {
       {
         id: 3,
         name: "Chemistry",
-        date: "2024-07-18",
+        date: "2024-08-14",
         exam: "waec",
         time: "14:00",
       },
     ],
+    visibility: {},
     loading: true,
   };
 
+  static propTypes = {
+    navigate: PropTypes.func.isRequired,
+  };
+
+  navigateToEdit = () => {
+    const { navigate } = this.props;
+    navigate("edit");
+  };
+
+  toggleVisibility = (id) => {
+    this.setState((prevState) => {
+      const newVisibility = { ...prevState.visibility };
+      newVisibility[id] = !newVisibility[id]; // Toggle the visibility for the specific id
+      return { visibility: newVisibility };
+    });
+  };
+
   render() {
-    const { upcomingExams } = this.state;
+    const { upcomingExams, visibility } = this.state;
 
     if (upcomingExams.length === 0) {
       return (
@@ -60,7 +80,7 @@ class SchedulePlan extends Component {
           </div>
           <AddScheduleButton />
         </div>
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-[4rem]">
           {upcomingExams.map((exam) => (
             <div className="flex w-full 2xl:h-[15rem] h-[10rem]" key={exam.id}>
               <div
@@ -78,7 +98,7 @@ class SchedulePlan extends Component {
                     {exam.name}
                   </div>
                   <div
-                    className={`flex w-fit h-fix px-4 p-2 rounded-[1.688rem] text-[1.5rem]  text-white  ${assignColor(
+                    className={`flex w-fit h-fix px-4 p-2 rounded-[1.688rem] text-[1.5rem] text-white ${assignColor(
                       exam.date
                     )}`}
                   >
@@ -93,13 +113,16 @@ class SchedulePlan extends Component {
                   <div className="font-[700] 2xl:text-[2.5rem] text-[1.5rem]">
                     {exam.exam}
                   </div>
-                  <button>
-                    <img
-                      src={EditIcon}
-                      alt="Edit Icon"
-                      className="w-[1.5rem] 2xl:w-[2.5rem] h-[1.5rem] 2xl:h-[2.5rem]"
-                    />
-                  </button>
+                  <div className="flex gap-3">
+                    <button onClick={() => this.toggleVisibility(exam.id)}>
+                      <EllipsisVerticalIcon className="w-[1.5rem] 2xl:w-[2.5rem] h-[1.5rem] 2xl:h-[2.5rem]" />
+                    </button>
+                    {visibility[exam.id] && (
+                      <div className="absolute right-4 -bottom-[3.5rem]">
+                        <ScheduleEditAndDelete />
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -110,4 +133,4 @@ class SchedulePlan extends Component {
   }
 }
 
-export default SchedulePlan;
+export default withRouterHooks(SchedulePlan);
