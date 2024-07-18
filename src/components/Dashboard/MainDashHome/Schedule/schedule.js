@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { PlusIcon } from "@heroicons/react/20/solid";
+import {
+  assignColor,
+  daysLeft,
+  formatDate,
+} from "../../../../Utils/AutoStyling";
 
 class Schedule extends Component {
   state = {
@@ -25,40 +30,6 @@ class Schedule extends Component {
       },
     ],
     loading: true,
-  };
-
-  assignColor = (examDate) => {
-    const currentTime = new Date();
-    const examTime = new Date(examDate);
-    const timeDiff = examTime - currentTime;
-    const dayDiff = timeDiff / (1000 * 60 * 60 * 24);
-
-    if (dayDiff <= 7) {
-      return "bg-[#EA4335]";
-    } else if (dayDiff <= 30) {
-      return "bg-skyblue-secondary";
-    } else {
-      return "bg-[#217A53]";
-    }
-  };
-
-  daysLeft = (examDate) => {
-    const currentTime = new Date();
-    const examTime = new Date(examDate);
-
-    currentTime.setHours(0, 0, 0, 0);
-    examTime.setHours(0, 0, 0, 0);
-
-    const timeDiff = examTime - currentTime;
-    const dayDiff = Math.round(timeDiff / (1000 * 60 * 60 * 24));
-
-    return dayDiff;
-  };
-
-  formatDate = (dateString) => {
-    const options = { month: "short", day: "numeric" };
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("en-US", options).format(date);
   };
 
   render() {
@@ -105,27 +76,27 @@ class Schedule extends Component {
               key={exam.id}
             >
               <div
-                className={`flex justify-center items-center text-white flex-wrap w-[10rem] 2xl:w-[6.813rem] 2xl:h-[5.813rem] h-[100%] rounded-l font-[700] text-[1.5rem] leading-[2.043rem] ${this.assignColor(
+                className={`flex justify-center items-center text-white flex-wrap w-[10rem] 2xl:w-[6.813rem] 2xl:h-[5.813rem] h-[100%] rounded-l font-[700] text-[1.5rem] leading-[2.043rem] ${assignColor(
                   exam.date
                 )}`}
               >
                 <div className="w-[2.813rem] h-[4.125rem]">
-                  {this.formatDate(exam.date)}
+                  {formatDate(exam.date)}
                 </div>
               </div>
               <div className="flex flex-col justify-evenly w-[100%] leading-[1.362rem] text-[1rem] border-t-2 border-r-2 border-b-2 rounded-r-[0.5rem] pl-4 relative">
                 <div>{exam.name}</div>
                 <div className="font-[700]">{exam.exam}</div>
                 <div
-                  className={`flex w-fit px-2 rounded-[1.688rem] text-white absolute right-4 bottom-4 ${this.assignColor(
+                  className={`flex w-fit px-2 rounded-[1.688rem] text-white absolute right-4 bottom-4 ${assignColor(
                     exam.date
                   )}`}
                 >
-                  {this.daysLeft(exam.date) === 0
+                  {daysLeft(exam.date) === 0
                     ? "Today"
-                    : this.daysLeft(exam.date) === 1
+                    : daysLeft(exam.date) === 1
                     ? "Tomorrow"
-                    : `${this.daysLeft(exam.date)} days left`}
+                    : `${daysLeft(exam.date)} days left`}
                 </div>
               </div>
             </div>
