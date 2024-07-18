@@ -48,7 +48,7 @@ class SchedulePlan extends Component {
   toggleVisibility = (id) => {
     this.setState((prevState) => {
       const newVisibility = { ...prevState.visibility };
-      newVisibility[id] = !newVisibility[id]; // Toggle the visibility for the specific id
+      newVisibility[id] = !newVisibility[id];
       return { visibility: newVisibility };
     });
   };
@@ -73,7 +73,7 @@ class SchedulePlan extends Component {
     }
 
     return (
-      <div className="w-[90%] font-sans">
+      <div className="w-[90%] font-sans mb-[4rem]">
         <div className="flex justify-between mb-4">
           <div className="flex justify-center items-center font-bold text-2xl 2xl:text-[3.375rem]">
             Schedule Exam
