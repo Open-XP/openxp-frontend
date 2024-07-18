@@ -43,6 +43,9 @@ class AddSchedule extends Component {
         ? "Edit Schedule"
         : "Add Schedule";
 
+    const SaveOrUpdate =
+      location.pathname === "/dashboard/schedule-plan/edit" ? "Update" : "Save";
+
     return (
       <div className="flex flex-col w-[95%] font-inter my-4 gap-[3rem] p-8">
         <div className="flex gap-4 items-center">
@@ -114,7 +117,7 @@ class AddSchedule extends Component {
         </div>
         <div className="flex justify-end">
           <button className="flex justify-center items-center w-[13.375rem] h-[3.438rem] bg-purple-primary rounded-[0.438rem] text-white font-[600] text-lg 2xl:text-[2.25rem] leading-[2.043rem]">
-            <div>Save</div>
+            <div>{SaveOrUpdate}</div>
           </button>
         </div>
       </div>
