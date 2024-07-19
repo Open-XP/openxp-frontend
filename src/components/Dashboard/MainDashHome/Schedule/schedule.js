@@ -10,7 +10,6 @@ import { fetchAllSchedules } from "../../../../Actions/Schedule";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouterHooks } from "../../../../withRouters/withRoutersHook";
-import { schema } from "@dicebear/core";
 
 class Schedule extends Component {
   state = {
