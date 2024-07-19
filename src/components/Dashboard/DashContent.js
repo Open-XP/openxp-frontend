@@ -75,7 +75,7 @@ export function DashContent() {
           }
         />
         <Route
-          path="/schedule-plan/edit"
+          path="/schedule-plan/edit/:id"
           element={
             <div>
               <DashboardNavBar className="" />
