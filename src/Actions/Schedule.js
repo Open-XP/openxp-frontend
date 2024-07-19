@@ -17,14 +17,14 @@ import {
 
 // Action to fetch all schedules
 export const fetchAllSchedules = () => (dispatch, getState) => {
-  axios
+  return axios
     .get(`${baseurl}/api/examscheduler/exams/`, tokenConfig(getState))
-    .then((res) =>
+    .then((res) => {
       dispatch({
         type: FETCH_ALL_SCHEDULES_SUCCESS,
         payload: res.data,
-      })
-    )
+      });
+    })
     .catch((err) => {
       dispatch(returnErrors(err.response.data, err.response.status));
       dispatch({ type: FETCH_ALL_SCHEDULES_FAIL });
@@ -105,12 +105,12 @@ export const updateSchedule =
 
 // Action to delete a schedule
 export const deleteSchedule = (id) => (dispatch, getState) => {
-  axios
+  return axios
     .delete(`${baseurl}/api/examscheduler/exams/${id}/`, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: DELETE_SCHEDULE_SUCCESS,
-        payload: res.data,
+        payload: id,
       });
     })
     .catch((err) => {
