@@ -7,22 +7,23 @@ import PropTypes from "prop-types";
 import { withRouterHooks } from "../../../withRouters/withRoutersHook";
 import ScheduleEditAndDelete from "./ScheduleComponent/ScheduleEditAndDelete";
 import { connect } from "react-redux";
-import { fetchAllSchedules } from "../../../Actions/Schedule";
+import { fetchAllSchedules, deleteSchedule } from "../../../Actions/Schedule";
 
 class SchedulePlan extends Component {
   state = {
     visibility: {},
-    loading: true,
   };
 
   static propTypes = {
     navigate: PropTypes.func.isRequired,
     schedules: PropTypes.array.isRequired,
+    fetchAllSchedules: PropTypes.func.isRequired,
+    deleteSchedule: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired,
   };
 
   componentDidMount() {
-    const { fetchAllSchedules } = this.props;
-    fetchAllSchedules();
+    this.props.fetchAllSchedules();
   }
 
   toggleVisibility = (id) => {
@@ -35,9 +36,17 @@ class SchedulePlan extends Component {
 
   render() {
     const { visibility } = this.state;
-    const { schedules } = this.props;
+    const { schedules, loading } = this.props;
 
-    if (schedules?.length === 0) {
+    if (loading) {
+      return <div>Loading...</div>;
+    }
+
+    const sortedSchedules = [...schedules].sort(
+      (a, b) => new Date(a.date) - new Date(b.date)
+    );
+
+    if (sortedSchedules.length === 0) {
       return (
         <div className="flex w-full min-h-screen justify-center">
           <div className="w-4/5 flex flex-col gap-[18rem] mt-[3rem]">
@@ -62,7 +71,7 @@ class SchedulePlan extends Component {
           <AddScheduleButton />
         </div>
         <div className="flex flex-col gap-[4rem]">
-          {schedules?.map((exam) => (
+          {sortedSchedules.map((exam) => (
             <div className="flex w-full 2xl:h-[15rem] h-[10rem]" key={exam.id}>
               <div
                 className={`flex justify-center items-center text-white flex-wrap w-[10rem] 2xl:w-[15rem] 2xl:h-full h-[100%] rounded-l font-[700] text-[1.5rem] 2xl:text-[3rem] 2xl:leading-[4.086rem] leading-[2.043rem] text-center ${assignColor(
@@ -100,7 +109,10 @@ class SchedulePlan extends Component {
                     </button>
                     {visibility[exam.id] && (
                       <div className="absolute right-4 -bottom-[3.5rem]">
-                        <ScheduleEditAndDelete id={exam.id} />
+                        <ScheduleEditAndDelete
+                          id={exam.id}
+                          onDelete={this.props.fetchAllSchedules}
+                        />
                       </div>
                     )}
                   </div>
@@ -116,10 +128,12 @@ class SchedulePlan extends Component {
 
 const mapStateToProps = (state) => ({
   schedules: state.scheduleexam.schedules,
+  loading: state.scheduleexam.loading,
 });
 
 const mapDispatchToProps = {
   fetchAllSchedules,
+  deleteSchedule,
 };
 
 export default withRouterHooks(
