@@ -11,7 +11,6 @@ import { fetchAllSchedules } from "../../../Actions/Schedule";
 
 class SchedulePlan extends Component {
   state = {
-    upcomingExams: [],
     visibility: {},
     loading: true,
   };
