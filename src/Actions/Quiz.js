@@ -2,6 +2,7 @@ import { tokenConfig } from "./Auth";
 import axios from "axios";
 import { returnErrors } from "./Messages";
 import { persistor } from "../Store/Store";
+import { baseurl } from "./Auth";
 import {
   START_TEST_SUCCESS,
   START_TEST_FAIL,
@@ -29,10 +30,6 @@ import {
   FETCH_INDIVIDUAL_SUBJECT_QUESTION_FAIL,
   RESET_QUESTIONS_ON_LEAVE_PAGE,
 } from "./Types";
-
-// const baseurl = "https://kaput-cannon-obedient-walk-production.pipeops.app";
-const baseurl = "http://127.0.0.1:8000";
-
 
 // Action to start a test
 export const startTest =
@@ -191,19 +188,22 @@ export const fetchAllTestInstances = () => (dispatch, getState) => {
 export const fetchUserScore = (test_instance_id) => (dispatch, getState) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${baseurl}/api/quiz/exams/user-score/${test_instance_id}/`, tokenConfig(getState))
+      .get(
+        `${baseurl}/api/quiz/exams/user-score/${test_instance_id}/`,
+        tokenConfig(getState)
+      )
       .then((res) => {
         dispatch({
           type: FETCH_USER_SCORE_SUCCESS,
           payload: res.data,
         });
-        console.log('fetchUserScore SUCCESS:', res.data); // Debugging
+        console.log("fetchUserScore SUCCESS:", res.data); // Debugging
         resolve(res.data);
       })
       .catch((err) => {
         dispatch(returnErrors(err.response.data, err.response.status));
         dispatch({ type: FETCH_USER_SCORE_FAIL });
-        console.log('fetchUserScore FAIL:', err); // Debugging
+        console.log("fetchUserScore FAIL:", err); // Debugging
         reject(err);
       });
   });
