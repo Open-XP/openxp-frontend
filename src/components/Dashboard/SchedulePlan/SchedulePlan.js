@@ -6,44 +6,25 @@ import { assignColor, daysLeft, formatDate } from "../../../Utils/AutoStyling";
 import PropTypes from "prop-types";
 import { withRouterHooks } from "../../../withRouters/withRoutersHook";
 import ScheduleEditAndDelete from "./ScheduleComponent/ScheduleEditAndDelete";
+import { connect } from "react-redux";
+import { fetchAllSchedules } from "../../../Actions/Schedule";
 
 class SchedulePlan extends Component {
   state = {
-    upcomingExams: [
-      {
-        id: 1,
-        name: "Mathematics",
-        date: "2024-07-25",
-        exam: "waec",
-        time: "10:00",
-      },
-      {
-        id: 2,
-        name: "Physics",
-        date: "2024-09-25",
-        exam: "waec",
-        time: "12:00",
-      },
-      {
-        id: 3,
-        name: "Chemistry",
-        date: "2024-08-14",
-        exam: "waec",
-        time: "14:00",
-      },
-    ],
+    upcomingExams: [],
     visibility: {},
     loading: true,
   };
 
   static propTypes = {
     navigate: PropTypes.func.isRequired,
+    schedules: PropTypes.array.isRequired,
   };
 
-  navigateToEdit = () => {
-    const { navigate } = this.props;
-    navigate("edit");
-  };
+  componentDidMount() {
+    const { fetchAllSchedules } = this.props;
+    fetchAllSchedules();
+  }
 
   toggleVisibility = (id) => {
     this.setState((prevState) => {
@@ -54,9 +35,10 @@ class SchedulePlan extends Component {
   };
 
   render() {
-    const { upcomingExams, visibility } = this.state;
+    const { visibility } = this.state;
+    const { schedules } = this.props;
 
-    if (upcomingExams.length === 0) {
+    if (schedules?.length === 0) {
       return (
         <div className="flex w-full min-h-screen justify-center">
           <div className="w-4/5 flex flex-col gap-[18rem] mt-[3rem]">
@@ -81,7 +63,7 @@ class SchedulePlan extends Component {
           <AddScheduleButton />
         </div>
         <div className="flex flex-col gap-[4rem]">
-          {upcomingExams.map((exam) => (
+          {schedules?.map((exam) => (
             <div className="flex w-full 2xl:h-[15rem] h-[10rem]" key={exam.id}>
               <div
                 className={`flex justify-center items-center text-white flex-wrap w-[10rem] 2xl:w-[15rem] 2xl:h-full h-[100%] rounded-l font-[700] text-[1.5rem] 2xl:text-[3rem] 2xl:leading-[4.086rem] leading-[2.043rem] text-center ${assignColor(
@@ -95,7 +77,7 @@ class SchedulePlan extends Component {
               <div className="flex flex-col justify-evenly w-[100%] leading-[1.362rem] text-[1rem] border-t-2 border-r-2 border-b-2 rounded-r-[0.5rem] pl-4 relative">
                 <div className="flex flex-row justify-between pr-14">
                   <div className="2xl:text-[2.5rem] text-[1.5rem] font-[600]">
-                    {exam.name}
+                    {exam.subject}
                   </div>
                   <div
                     className={`flex w-fit h-fix px-4 p-2 rounded-[1.688rem] text-[1.5rem] text-white ${assignColor(
@@ -111,7 +93,7 @@ class SchedulePlan extends Component {
                 </div>
                 <div className="flex justify-between pr-14">
                   <div className="font-[700] 2xl:text-[2.5rem] text-[1.5rem]">
-                    {exam.exam}
+                    {exam.exam_type}
                   </div>
                   <div className="flex gap-3">
                     <button onClick={() => this.toggleVisibility(exam.id)}>
@@ -119,7 +101,7 @@ class SchedulePlan extends Component {
                     </button>
                     {visibility[exam.id] && (
                       <div className="absolute right-4 -bottom-[3.5rem]">
-                        <ScheduleEditAndDelete />
+                        <ScheduleEditAndDelete id={exam.id} />
                       </div>
                     )}
                   </div>
@@ -133,4 +115,14 @@ class SchedulePlan extends Component {
   }
 }
 
-export default withRouterHooks(SchedulePlan);
+const mapStateToProps = (state) => ({
+  schedules: state.scheduleexam.schedules,
+});
+
+const mapDispatchToProps = {
+  fetchAllSchedules,
+};
+
+export default withRouterHooks(
+  connect(mapStateToProps, mapDispatchToProps)(SchedulePlan)
+);
