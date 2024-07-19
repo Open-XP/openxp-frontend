@@ -41,7 +41,9 @@ class ScheduleEditAndDelete extends Component {
             className="flex items-center bg-red-primary text-black font-medium 2xl:text-[2.25rem] gap-2 hover:bg-gray-100 w-full h-1/2"
           >
             <DeleteSvg className="size-[2rem]  ml-10" />
-            <div className="text-[1.5rem] font-[500] ml-3">Delete</div>
+            <div className="text-[1.5rem] font-[500] ml-3 text-red-500">
+              Delete
+            </div>
           </button>
         </div>
       </div>
