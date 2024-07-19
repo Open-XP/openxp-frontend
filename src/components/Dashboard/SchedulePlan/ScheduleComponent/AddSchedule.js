@@ -61,44 +61,25 @@ class AddSchedule extends Component {
 
   handleCreateOrUpdate = (e) => {
     e.preventDefault();
-    const { location, updateSchedule, createSchedule } = this.props;
+    const { location, updateSchedule, createSchedule, navigate } = this.props;
     const { subject, exam_type, date, time, description } = this.state;
     const pathParts = location.pathname.split("/");
     const id = pathParts[pathParts.length - 1];
     console.log({ id, subject, exam_type, date, time, description });
 
-    // Validate inputs
-    if (!subject || typeof subject !== "string") {
-      alert("Subject is not valid");
-      return;
-    }
-    if (!exam_type || typeof exam_type !== "string") {
-      alert("Exam Type is not valid");
-      return;
-    }
-    if (!date || typeof date !== "string") {
-      alert("Date is required");
-      return;
-    }
-    if (!time || typeof time !== "string") {
-      alert("Time is required");
-      return;
-    }
-
     const scheduleData = {
-      subject: String(subject),
-      exam_type: String(exam_type),
-      date: String(date),
-      time: String(time),
-      description: String(description),
+      subject: subject,
+      exam_type: exam_type,
+      date: date,
+      time: time,
+      description: description,
     };
 
-    console.log("Sending schedule data:", scheduleData);
-
     if (location.pathname === `/dashboard/schedule-plan/edit/${id}`) {
-      updateSchedule(id, scheduleData);
+      updateSchedule(id, subject, exam_type, date, time, description);
     } else if (location.pathname === `/dashboard/schedule-plan/create`) {
-      createSchedule(scheduleData);
+      createSchedule(subject, exam_type, date, time, description);
+      navigate("/dashboard/schedule-plan");
     }
   };
 
