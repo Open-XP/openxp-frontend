@@ -6,42 +6,42 @@ import {
   daysLeft,
   formatDate,
 } from "../../../../Utils/AutoStyling";
+import { fetchAllSchedules } from "../../../../Actions/Schedule";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withRouterHooks } from "../../../../withRouters/withRoutersHook";
+import { schema } from "@dicebear/core";
 
 class Schedule extends Component {
   state = {
-    upcomingExams: [
-      {
-        id: 1,
-        name: "Mathematics",
-        date: "2024-07-25",
-        exam: "waec",
-      },
-      {
-        id: 2,
-        name: "Physics",
-        date: "2024-09-25",
-        exam: "waec",
-      },
-      {
-        id: 3,
-        name: "Chemistry",
-        date: "2024-07-15",
-        exam: "waec",
-      },
-    ],
     loading: true,
   };
 
-  render() {
-    const { upcomingExams, loading } = this.state;
+  static propTypes = {
+    navigate: PropTypes.func.isRequired,
+    schedules: PropTypes.array.isRequired,
+  };
 
-    const sortedExams = [...upcomingExams].sort(
+  componentDidMount() {
+    const { fetchAllSchedules } = this.props;
+    fetchAllSchedules();
+  }
+
+  handleCreateSchedule = () => {
+    this.props.navigate("/dashboard/schedule-plan/create");
+  };
+
+  render() {
+    const { loading } = this.state;
+    const { schedules } = this.props;
+
+    const sortedExams = [...schedules].sort(
       (a, b) => new Date(a.date) - new Date(b.date)
     );
 
     const recentExams = sortedExams.slice(0, 2);
 
-    if (upcomingExams.length === 0) {
+    if (schedules.length === 0) {
       return (
         <div className="flex flex-col gap-4 pt-4 pl-[3rem]">
           <div className="font-[700] text-[1.5rem] leading-[2.043rem]">
@@ -51,7 +51,10 @@ class Schedule extends Component {
             <div className="w-[22rem] h-[2.063rem] font-[700] text-[1.5rem]">
               You have no exam scheduled
             </div>
-            <button className="flex items-center justify-center w-[3.438rem] h-[2.5rem] bg-purple-primary">
+            <button
+              onClick={this.handleCreateSchedule}
+              className="flex items-center justify-center w-[3.438rem] h-[2.5rem] bg-purple-primary"
+            >
               <PlusIcon className="text-white" />
             </button>
           </div>
@@ -87,8 +90,8 @@ class Schedule extends Component {
                 </div>
               </div>
               <div className="flex flex-col justify-evenly w-[100%] leading-[1.362rem] text-[1rem] border-t-2 border-r-2 border-b-2 rounded-r-[0.5rem] pl-4 relative">
-                <div>{exam.name}</div>
-                <div className="font-[700]">{exam.exam}</div>
+                <div>{exam.subject}</div>
+                <div className="font-[700]">{exam.exam_type}</div>
                 <div
                   className={`flex w-fit px-2 rounded-[1.688rem] text-white absolute right-4 bottom-4 ${assignColor(
                     exam.date
@@ -109,4 +112,14 @@ class Schedule extends Component {
   }
 }
 
-export default Schedule;
+const mapStateToProps = (state) => ({
+  schedules: state.scheduleexam.schedules,
+});
+
+const mapDispatchToProps = {
+  fetchAllSchedules,
+};
+
+export default withRouterHooks(
+  connect(mapStateToProps, mapDispatchToProps)(Schedule)
+);
