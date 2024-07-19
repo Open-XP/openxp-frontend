@@ -9,6 +9,9 @@ import { connect } from "react-redux";
 class ScheduleEditAndDelete extends Component {
   static propTypes = {
     navigate: PropTypes.func.isRequired,
+    id: PropTypes.string.isRequired,
+    deleteSchedule: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
   };
 
   navigateToEdit = () => {
@@ -17,8 +20,10 @@ class ScheduleEditAndDelete extends Component {
   };
 
   deleteSchedule = () => {
-    const { id } = this.props;
-    this.props.deleteSchedule(id);
+    const { id, deleteSchedule, onDelete } = this.props;
+    deleteSchedule(id).then(() => {
+      onDelete();
+    });
   };
 
   render() {
