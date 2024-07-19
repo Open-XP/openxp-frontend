@@ -3,6 +3,8 @@ import EditIcon from "../../../../icons/edit-icon.png";
 import { ReactComponent as DeleteSvg } from "../../../../svgs/Trash-bin.svg";
 import PropTypes from "prop-types";
 import { withRouterHooks } from "../../../../withRouters/withRoutersHook";
+import { deleteSchedule } from "../../../../Actions/Schedule";
+import { connect } from "react-redux";
 
 class ScheduleEditAndDelete extends Component {
   static propTypes = {
@@ -10,8 +12,13 @@ class ScheduleEditAndDelete extends Component {
   };
 
   navigateToEdit = () => {
-    const { navigate } = this.props;
-    navigate("edit");
+    const { navigate, id } = this.props;
+    navigate("edit/" + id);
+  };
+
+  deleteSchedule = () => {
+    const { id } = this.props;
+    this.props.deleteSchedule(id);
   };
 
   render() {
@@ -29,7 +36,10 @@ class ScheduleEditAndDelete extends Component {
             />
             <div className="text-[1.5rem] font-[500] ml-3">Edit</div>
           </button>
-          <button className="flex items-center bg-red-primary text-black font-medium 2xl:text-[2.25rem] gap-2 hover:bg-gray-100 w-full h-1/2">
+          <button
+            onClick={this.deleteSchedule}
+            className="flex items-center bg-red-primary text-black font-medium 2xl:text-[2.25rem] gap-2 hover:bg-gray-100 w-full h-1/2"
+          >
             <DeleteSvg className="size-[2rem]  ml-10" />
             <div className="text-[1.5rem] font-[500] ml-3">Delete</div>
           </button>
@@ -39,4 +49,10 @@ class ScheduleEditAndDelete extends Component {
   }
 }
 
-export default withRouterHooks(ScheduleEditAndDelete);
+const mapDispatchToProps = {
+  deleteSchedule,
+};
+
+export default withRouterHooks(
+  connect(null, mapDispatchToProps)(ScheduleEditAndDelete)
+);
