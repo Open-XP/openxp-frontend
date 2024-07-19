@@ -10,7 +10,7 @@ class NoSchedule extends Component {
           src={ClockIcon}
           alt="Clock Icon"
         />
-        <div className="w-[43.563rem] 2xl:w-[86%] h-[6.563rem] 2xl:h-[18rem] font-[700] 2xl:text-[6.75rem] text-[2.5rem] leading-[3.026rem] 2xl:leading-[8.026rem] font-inter text-[#667085] flex items-center justify-center">
+        <div className="w-[43.563rem] 2xl:w-[86%] h-[6.563rem] 2xl:h-[18rem] font-[700] 2xl:text-[6.75rem] text-[2.5rem] leading-[2.5rem] 2xl:leading-[8.026rem] font-inter text-[#667085] flex items-center justify-center">
           Your Schedule is empty because you do not have anything created
         </div>
       </div>
