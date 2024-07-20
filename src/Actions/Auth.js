@@ -18,7 +18,7 @@ import {
 } from "./Types";
 
 // const baseurl = "https://kaput-cannon-obedient-walk-production.pipeops.app";
-export const baseurl = "http://127.0.0.1:8000";
+export const baseurl = "http://34.204.91.114/";
 
 // CHECK TOKEN & LOAD USER
 export const loadUser = () => (dispatch, getState) => {
