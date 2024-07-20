@@ -5,7 +5,7 @@ eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/school
 
 echo "Switching to branch master"
-git checkout master
+git checkout main
 
 echo "Building frontend"
 npm run build
