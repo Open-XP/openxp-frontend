@@ -7,10 +7,9 @@ ssh-add ~/.ssh/school
 echo "Switching to branch master"
 git checkout main
 
-echo "Building frontend"
-npm run build
+# echo "Building App"
+# npm run build
 
 echo "Deploying frontend"
-scp -o StrictHostKeyChecking=no -i ~/.ssh/school -r build/* ubuntu@54.173.133.193:/var/www/54.173.133.193
-
-echo "Frontend deployed"
+scp -o StrictHostKeyChecking=no -i ~/.ssh/school -r build/* ubuntu@13.49.145.101:~/build
+echo "App deployed"
