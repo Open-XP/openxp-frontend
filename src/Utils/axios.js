@@ -3,7 +3,7 @@ import axios from "axios";
 import { getCookie } from "./csrf";
 
 const instance = axios.create({
-  baseURL: "http://openxp.study", // replace with your API base URL
+  baseURL: "http://127.0.0.1:8000", // replace with your API base URL
   withCredentials: true, // include cookies in requests
 });
 
