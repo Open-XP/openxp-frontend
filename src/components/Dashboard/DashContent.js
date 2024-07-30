@@ -1,8 +1,8 @@
 import React from "react";
+import { Routes, Route } from "react-router-dom";
 import DashboardContent from "../../components/Dashboard/MainDashHome/DashboardContent";
 import SideBar from "./DashBoardSideBar/SideBar";
 import DashboardNavBar from "./DashBoardSideBar/DashboardNavBar";
-import { Routes, Route } from "react-router-dom";
 import Void from "./DashBoardSideBar/void";
 import MockExam from "../../components/Dashboard/TestandSimulation/MockExams/MockExam";
 import Evaluation from "../../components/Dashboard/TestandSimulation/EvaluationScreen/Evaluation";
@@ -30,7 +30,7 @@ export function DashContent() {
           }
         />
         <Route
-          path="/mock-exam"
+          path="mock-exam"
           element={
             <div>
               <DashboardNavBar className="-mt" />
@@ -45,7 +45,7 @@ export function DashContent() {
           }
         />
         <Route
-          path="/schedule-plan"
+          path="schedule-plan"
           element={
             <div>
               <DashboardNavBar className="-mt" />
@@ -60,7 +60,7 @@ export function DashContent() {
           }
         />
         <Route
-          path="/schedule-plan/create"
+          path="schedule-plan/create"
           element={
             <div>
               <DashboardNavBar className="" />
@@ -75,7 +75,7 @@ export function DashContent() {
           }
         />
         <Route
-          path="/schedule-plan/edit/:id"
+          path="schedule-plan/edit/:id"
           element={
             <div>
               <DashboardNavBar className="" />
@@ -89,8 +89,8 @@ export function DashContent() {
             </div>
           }
         />
-        <Route path="/mock-exam/evaluation/:id" element={<Evaluation />} />
-        <Route path="/summary" element={<SummaryPage />} />
+        <Route path="mock-exam/evaluation/:id" element={<Evaluation />} />
+        <Route path="summary" element={<SummaryPage />} />
       </Routes>
     </div>
   );
