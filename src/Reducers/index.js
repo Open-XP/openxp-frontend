@@ -5,6 +5,7 @@ import auth from "./Auth";
 import user from "./User";
 import quiz from "./Quiz";
 import scheduleexam from "./ScheduleExam";
+import ai from "./AI";
 
 export default combineReducers({
   errors,
@@ -13,4 +14,5 @@ export default combineReducers({
   user,
   scheduleexam,
   quiz,
+  ai,
 });
