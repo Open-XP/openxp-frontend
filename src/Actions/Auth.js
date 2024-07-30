@@ -17,7 +17,7 @@ import {
   PASSWORD_RESET_NOT_SENT,
 } from "./Types";
 
-export const baseurl = "http://13.49.145.101";
+export const baseurl = "http://127.0.0.1:8000"; // replace with your API base URL
 
 // CHECK TOKEN & LOAD USER
 export const loadUser = () => (dispatch, getState) => {
