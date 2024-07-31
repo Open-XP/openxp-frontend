@@ -1,9 +1,9 @@
-import { EXPLAIN_ANSWER_SUCCESS, EXPLAIN_ANSWER_FAIL } from "./Types";
+import { EXPLAIN_ANSWER_SUCCESS, EXPLAIN_ANSWER_FAIL } from "../Actions/Types";
 
 const initialState = {
-  explanation: {},
+  explanation: [],
   error: {},
-  loading: true,
+  explainatioLoading: true,
 };
 
 export default function (state = initialState, action) {
@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         explanation: payload,
-        loading: false,
+        explainatioLoading: false,
       };
     case EXPLAIN_ANSWER_FAIL:
       return {
