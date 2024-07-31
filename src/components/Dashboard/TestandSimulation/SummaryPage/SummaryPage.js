@@ -3,6 +3,7 @@ import Checkmark from "../../../../icons/checkmark.png";
 import Cancelmark from "../../../../icons/cancelmark.png";
 import PropTypes from "prop-types";
 import { fetchUserScore } from "../../../../Actions/Quiz";
+import { explainAnswer } from "../../../../Actions/AI";
 import { withRouterHooks } from "../../../../withRouters/withRoutersHook";
 import { connect } from "react-redux";
 
@@ -13,11 +14,14 @@ class SummaryPage extends Component {
     fetchUserScore: PropTypes.func.isRequired,
     userScores: PropTypes.object.isRequired,
     completedTestResponse: PropTypes.object.isRequired,
+    explainAnswer: PropTypes.func.isRequired,
+    explanation: PropTypes.array.isRequired,
   };
 
   state = {
     visibility: [],
-    loading: true,
+    explanations: {},
+    loadingStatus: {},
   };
 
   componentDidMount() {
@@ -41,8 +45,39 @@ class SummaryPage extends Component {
     this.setState((prevState) => {
       const newVisibility = [...prevState.visibility];
       newVisibility[index] = !newVisibility[index];
+
+      // Fetch explanation if the section is being shown
+      if (newVisibility[index]) {
+        this.handleExplainAnswer(index);
+      }
+
       return { visibility: newVisibility };
     });
+  };
+
+  handleExplainAnswer = (index) => {
+    const { userScores, explainAnswer } = this.props;
+    const item = userScores.incorrect_questions[index];
+    const question = item.question;
+    const options = ` ${item.option_A} ${item.option_B} ${item.option_C} ${item.option_D}`;
+    const text =
+      "Justify why the selected answer is correct and explain in details";
+
+    this.setState((prevState) => ({
+      loadingStatus: { ...prevState.loadingStatus, [index]: true },
+    }));
+
+    explainAnswer(`${text + `:`}${` ` + question}${` ` + options}`).finally(
+      () => {
+        this.setState((prevState) => ({
+          loadingStatus: { ...prevState.loadingStatus, [index]: false },
+          explanations: {
+            ...prevState.explanations,
+            [index]: this.props.explanation.choices[0].message.content,
+          },
+        }));
+      }
+    );
   };
 
   returnHome = () => {
@@ -51,13 +86,28 @@ class SummaryPage extends Component {
   };
 
   renderSection = (index, question, answer) => {
-    const { visibility } = this.state;
+    const { visibility, explanations, loadingStatus } = this.state;
+
+    let explanationContent;
+    if (loadingStatus[index]) {
+      explanationContent = <div>Loading...</div>;
+    } else {
+      explanationContent = (
+        <strong>
+          <p className="w-[90%]">{explanations[index]}</p>
+        </strong>
+      );
+    }
+
     return (
       <div key={index} className="mb-4">
         <div className="font-[600] text-[1.5rem] font-sans leading-[2.043rem] w-[36.438rem] h-fit">
           {question}
         </div>
-        <div className={visibility[index] ? "" : "hidden"}>{answer}</div>
+        <div className={visibility[index] ? "" : "hidden"}>
+          {answer}
+          {explanationContent}
+        </div>
         <button
           onClick={() => this.toggleVisibility(index)}
           className="text-blue-500"
@@ -74,7 +124,11 @@ class SummaryPage extends Component {
     }
     const { userScores } = this.props;
 
-    if (!userScores || !userScores.correct_questions || !userScores.incorrect_questions) {
+    if (
+      !userScores ||
+      !userScores.correct_questions ||
+      !userScores.incorrect_questions
+    ) {
       return <div>No score data available</div>;
     }
 
@@ -108,7 +162,10 @@ class SummaryPage extends Component {
           <div className="font-[500] text-[1.5rem] w-[23.625rem] text-center lead-[2.043rem]">
             Average, Try again to understand concepts
           </div>
-          <button onClick={this.returnHome} className="w-[13.75rem] h-[4.25rem] bg-skyblue-secondary font-[700] text-[1.5rem] rounded-[0.438rem] flex items-center justify-center">
+          <button
+            onClick={this.returnHome}
+            className="w-[13.75rem] h-[4.25rem] bg-skyblue-secondary font-[700] text-[1.5rem] rounded-[0.438rem] flex items-center justify-center"
+          >
             Return Home
           </button>
         </div>
@@ -165,10 +222,12 @@ const mapStateToProps = (state) => ({
   testInstances: state.quiz.testInstances,
   userScores: state.quiz.userScores,
   completedTestResponse: state.quiz.completedTestResponse,
+  explanation: state.ai.explanation,
 });
 
 const mapDispatchToProps = {
   fetchUserScore,
+  explainAnswer,
 };
 
 export default withRouterHooks(
