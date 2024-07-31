@@ -1,5 +1,5 @@
-// actions/auth.js
-import axios from "../Utils/axios"; // Updated import
+import axios from "../Utils/axios";
+// import axios from "axios";
 import { returnErrors } from "./Messages";
 import {
   USER_LOADED,
@@ -17,14 +17,15 @@ import {
   PASSWORD_RESET_NOT_SENT,
 } from "./Types";
 
-export const baseurl = "http://127.0.0.1:8000"; // replace with your API base URL
+// const baseurl = "https://kaput-cannon-obedient-walk-production.pipeops.app";
+export const baseurl = "http://127.0.0.1:8000";
 
 // CHECK TOKEN & LOAD USER
 export const loadUser = () => (dispatch, getState) => {
   dispatch({ type: USER_LOADING });
 
   axios
-    .get(`/api/auth/user/me/`, tokenConfig(getState))
+    .get(`${baseurl}/api/auth/user/me/`, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: USER_LOADED,
@@ -50,7 +51,7 @@ export const login = (email, password) => (dispatch) => {
   const body = JSON.stringify({ email, password });
 
   axios
-    .post(`/api/auth/user/login/`, body, config)
+    .post(`${baseurl}/api/auth/user/login/`, body, config)
     .then((res) => {
       dispatch({
         type: LOGIN_SUCCESS,
@@ -85,7 +86,7 @@ export const registers =
     });
 
     axios
-      .post(`/api/auth/user/register/`, body, config)
+      .post(`${baseurl}/api/auth/user/register/`, body, config)
       .then((res) => {
         dispatch({
           type: REGISTER_SUCCESS,
@@ -103,7 +104,7 @@ export const registers =
 // LOGOUT USER
 export const logout = () => (dispatch, getState) => {
   axios
-    .get(`/api/auth/user/logout/`, tokenConfig(getState))
+    .get(`${baseurl}/api/auth/user/logout/`, tokenConfig(getState))
     .then((res) => {
       dispatch({ type: LOGOUT_SUCCESS });
     })
@@ -119,16 +120,18 @@ export const logout = () => (dispatch, getState) => {
 
 // RESET PASSWORD
 export const resetpassword = (email) => (dispatch) => {
+  // Headers
   const config = {
     headers: {
       "Content-Type": "application/json",
     },
   };
 
+  // Request Body
   const body = JSON.stringify({ email });
 
   axios
-    .post(`/api/auth/user/reset-password/`, body, config)
+    .post(`${baseurl}/api/auth/user/reset-password/`, body, config)
     .then((res) => {
       dispatch({
         type: PASSWORD_RESET_SENT,
@@ -146,17 +149,19 @@ export const resetpassword = (email) => (dispatch) => {
 // CONFIRM PASSWORD RESET
 export const confirmPassword =
   (uidb64, token, password, confirm_password) => (dispatch) => {
+    // Headers
     const config = {
       headers: {
         "Content-Type": "application/json",
       },
     };
 
+    // Request Body
     const body = JSON.stringify({ password, confirm_password });
 
     axios
       .post(
-        `/api/auth/user/password-reset-confirm/${uidb64}/${token}/`,
+        `${baseurl}/api/auth/user/password-reset-confirm/${uidb64}/${token}/`,
         body,
         config
       )
