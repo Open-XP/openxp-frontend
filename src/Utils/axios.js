@@ -1,6 +1,5 @@
-// utils/axios.js
 import axios from "axios";
-import { getCookie } from "./csrf";
+import { getCookie } from "./csrf"; // Make sure this function correctly fetches the CSRF token
 
 const instance = axios.create({
   baseURL: "http://127.0.0.1:8000", // replace with your API base URL
