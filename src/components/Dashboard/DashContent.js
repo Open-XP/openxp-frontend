@@ -9,6 +9,7 @@ import Evaluation from "../../components/Dashboard/TestandSimulation/EvaluationS
 import SummaryPage from "./TestandSimulation/SummaryPage/SummaryPage";
 import SchedulePlan from "./SchedulePlan/SchedulePlan";
 import AddSchedule from "./SchedulePlan/ScheduleComponent/AddSchedule";
+import _SummaryPage from "./TestandSimulation/SummaryPage/_SummaryPage";
 
 export function DashContent() {
   return (
@@ -91,6 +92,7 @@ export function DashContent() {
         />
         <Route path="mock-exam/evaluation/:id" element={<Evaluation />} />
         <Route path="summary" element={<SummaryPage />} />
+        <Route path="_summary" element={<_SummaryPage />} />
       </Routes>
     </div>
   );
