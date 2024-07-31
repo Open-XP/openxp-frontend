@@ -10,9 +10,10 @@ module.exports = {
       fontFamily: {
         sans: ["Open Sans", "ui-sans-serif", "system-ui"],
         inter: ["Inter", "sans-serif"],
+        manropes: ["Manrope", "sans-serif"],
       },
       boxShadow: {
-        custom: " 0 1px 0 rgba(0, 0, 0, 0.5)",
+        custom: "0 1px 0 rgba(0, 0, 0, 0.5)",
         custom2: "0px 1px 21px 0px rgba(0, 0, 0, 0.08)",
       },
       backgroundImage: {
@@ -28,6 +29,20 @@ module.exports = {
       colors: {
         "purple-primary": "#281266",
         "skyblue-secondary": "#2D9CDB",
+      },
+      keyframes: {
+        slideIn: {
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(0)" },
+        },
+        slideOut: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-100%)" },
+        },
+      },
+      animation: {
+        slideIn: "slideIn 0.5s ease-in-out forwards",
+        slideOut: "slideOut 0.5s ease-in-out forwards",
       },
     },
   },
