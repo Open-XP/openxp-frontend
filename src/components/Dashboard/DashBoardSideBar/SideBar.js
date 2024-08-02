@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { logout } from "../../../Actions/Auth";
 import { withRouterHooks } from "../../../withRouters/withRoutersHook";
+import Robot from "../../../icons/Robot.png";
 import {
   List,
   ListItem,
@@ -24,6 +25,7 @@ import {
   PowerIcon,
 } from "@heroicons/react/24/solid";
 import { connect } from "react-redux";
+import { link } from "@nextui-org/react";
 
 class SideBar extends Component {
   state = {
@@ -71,10 +73,12 @@ class SideBar extends Component {
     },
     {
       id: 3,
-      title: "Exam Catalog",
-      Icon: CircleStackIcon,
-      Arrow: LockClosedIcon,
+      title: "Career Bot",
+      Icon: Robot,
+      isImage: true,
+      Arrow: "none",
       rotate: false,
+      link: "/dashboard/career-bot",
     },
     {
       id: 4,
@@ -120,7 +124,7 @@ class SideBar extends Component {
     return (
       <div className="fixed top-32 h-screen w-full max-w-[30rem] p-4 shadow-xl bg-white">
         {this.accordionData.map(
-          ({ id, title, subtitle, Icon, Arrow, rotate, link }) => (
+          ({ id, title, subtitle, Icon, isImage, Arrow, rotate, link }) => (
             <List key={id}>
               <Accordion open={activeIndex === id}>
                 <ListItem className="flex flex-col">
@@ -142,14 +146,22 @@ class SideBar extends Component {
                           className="flex items-center gap-2 no-underline text-black"
                         >
                           <ListItemPrefix>
-                            <Icon className="h-5 w-5" />
+                            {isImage ? (
+                              <img src={Icon} alt={title} className="h-5 w-5" />
+                            ) : (
+                              <Icon className="h-5 w-5" />
+                            )}
                           </ListItemPrefix>
                           <span className="font-bold text-lg">{title}</span>
                         </Link>
                       ) : (
                         <>
                           <ListItemPrefix>
-                            <Icon className="h-5 w-5" />
+                            {isImage ? (
+                              <img src={Icon} alt={title} className="h-5 w-5" />
+                            ) : (
+                              <Icon className="h-5 w-5" />
+                            )}
                           </ListItemPrefix>
                           <span className="font-bold text-lg">{title}</span>
                         </>
