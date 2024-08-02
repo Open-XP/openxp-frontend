@@ -23,7 +23,7 @@ class ShowExplanation extends Component {
               <div className="w-[19.813rem] h-[3.375rem] bg-[#217A531A]/10 flex justify-center items-center font-[700] font-manropes text-[2rem] leading-[2.169rem] text-[#34C759] rounded-[0.313rem]">
                 Correct Answer(D)
               </div>
-              <div className="hidden">
+              <div className="">
                 <div className="flex flex-wrap font-[500] font-manropes text-[1.5rem] leading-[2.169rem]">
                   The correct answer is 8 sides because the formula for the sum
                   of the interior angles of a polygon is given by (n−2)×180°(n -
