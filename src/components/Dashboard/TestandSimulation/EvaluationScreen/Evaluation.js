@@ -39,7 +39,7 @@ class Evaluation extends Component {
 
   handleTimesUp = () => {
     this.props.completeTest(this.props.testInstances.id);
-    this.props.navigate("/summary");
+    this.props.navigate("/_summary");
   };
 
   componentWillUnmount() {
@@ -150,12 +150,12 @@ class Evaluation extends Component {
   };
 
   handRedirectToSummaryPage = () => {
-    this.props.navigate("/dashboard/summary");
+    this.props.navigate("/dashboard/_summary");
   };
 
   handleTimesUp = () => {
     this.props.completeTest(this.props.testInstances.id);
-    this.props.navigate("/dashboard/summary");
+    this.props.navigate("/dashboard/_summary");
   };
 
   renderQuestion = () => {
