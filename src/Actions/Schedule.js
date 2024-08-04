@@ -1,5 +1,6 @@
 import { tokenConfig } from "./Auth";
-import axios from "axios";
+// import axios from "axios";
+import axios from "../Utils/axios";
 import { returnErrors } from "./Messages";
 import { baseurl } from "./Auth";
 import {
