@@ -170,6 +170,10 @@ module.exports = {
             transform: "translateY(0)",
           },
         },
+        "lds-spinner": {
+          "0%": { opacity: "1" },
+          "100%": { opacity: "0" },
+        },
       },
       animation: {
         slideIn: "slideIn 0.5s ease-in-out forwards",
@@ -182,6 +186,7 @@ module.exports = {
         jelloHorizontal: "scaleDownCenter 0.75s ease-in-out forwards",
         slideInButtom: "scaleDownCenter 500ms ease 0s 1 alternate none",
         bounceInBottom: "bounceInBottom 1s both",
+        ldsSpinner: "lds-spinner 1.2s linear infinite",
       },
     },
   },
