@@ -7,6 +7,8 @@ import {
   FETCH_INDIVIDUAL_CHAT_SESSIONS_FAIL,
   FETCH_ALL_CHAT_SESSION_SUCCESS,
   FETCH_ALL_CHAT_SESSION_FAIL,
+  CHAT_SENT_SUCCESS,
+  CHAT_SENT_FAIL,
 } from "../Actions/Types";
 
 const initialState = {
@@ -16,6 +18,7 @@ const initialState = {
   careerBuddyStarted: false,
   loadingIndividualChatSessions: true,
   loadingAllChatSessions: true,
+  chatInstanceID: null,
   individualChatSessions: [],
   allChatSessions: [],
 };
@@ -27,7 +30,7 @@ export default function (state = initialState, action) {
     case EXPLAIN_ANSWER_SUCCESS:
       return {
         ...state,
-        explanation: payload,
+        explanation: action.payload,
         explainatioLoading: false,
       };
     case EXPLAIN_ANSWER_FAIL:
@@ -38,6 +41,7 @@ export default function (state = initialState, action) {
     case START_CHAT_SESSION_SUCCESS:
       return {
         ...state,
+        chatInstanceID: action.payload.id,
         careerBuddyStarted: true,
       };
     case START_CHAT_SESSION_FAIL:
@@ -48,7 +52,7 @@ export default function (state = initialState, action) {
     case FETCH_INDIVIDUAL_CHAT_SESSIONS_SUCCESS:
       return {
         ...state,
-        individualChatSessions: payload,
+        individualChatSessions: action.payload,
         loadingIndividualChatSessions: false,
       };
     case FETCH_INDIVIDUAL_CHAT_SESSIONS_FAIL:
@@ -59,10 +63,20 @@ export default function (state = initialState, action) {
     case FETCH_ALL_CHAT_SESSION_SUCCESS:
       return {
         ...state,
-        allChatSessions: payload,
+        allChatSessions: action.payload,
         loadingAllChatSessions: false,
       };
     case FETCH_ALL_CHAT_SESSION_FAIL:
+      return {
+        ...state,
+        error: payload,
+      };
+    case CHAT_SENT_SUCCESS:
+      return {
+        ...state,
+        chatSentStatus: true,
+      };
+    case CHAT_SENT_FAIL:
       return {
         ...state,
         error: payload,
