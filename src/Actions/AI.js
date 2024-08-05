@@ -11,6 +11,8 @@ import {
   FETCH_INDIVIDUAL_CHAT_SESSIONS_FAIL,
   FETCH_ALL_CHAT_SESSION_SUCCESS,
   FETCH_ALL_CHAT_SESSION_FAIL,
+  CHAT_SENT_SUCCESS,
+  CHAT_SENT_FAIL,
 } from "./Types";
 
 export const explainAnswer = (prompt) => (dispatch, getState) => {
@@ -77,6 +79,23 @@ export const FetchAllChatSessions = () => (dispatch, getState) => {
     .catch((err) => {
       dispatch(returnErrors(err.response.data, err.response.status));
       dispatch({ type: FETCH_ALL_CHAT_SESSION_FAIL });
+      throw err;
+    });
+};
+
+export const ChatInput = (session_id, message) => (dispatch, getState) => {
+  const body = JSON.stringify({ message });
+  return axios
+    .post(`${baseurl}/api/ai/chat/${session_id}/`, body, tokenConfig(getState))
+    .then((res) =>
+      dispatch({
+        type: CHAT_SENT_SUCCESS,
+        payload: res.data,
+      })
+    )
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+      dispatch({ type: CHAT_SENT_FAIL });
       throw err;
     });
 };
