@@ -93,7 +93,9 @@ class _SummaryPage extends Component {
             {this.props.userScores.correct_questions.length}
           </div>
           <div className="font-[600] text-[2.5rem] leading-[3.404rem] font-sans">
-            OF {this.props.userScores.total_questions}
+            OF{" "}
+            {this.props.userScores.correct_questions.length +
+              this.props.userScores.incorrect_questions.length}
           </div>
         </div>
       </div>
@@ -111,7 +113,9 @@ class _SummaryPage extends Component {
             {this.props.userScores.correct_questions.length}
           </div>
           <div className="font-[600] text-[2.5rem] leading-[3.404rem] font-sans">
-            OF {this.props.userScores.total_questions}
+            OF{" "}
+            {this.props.userScores.correct_questions.length +
+              this.props.userScores.incorrect_questions.length}
           </div>
         </div>
       </div>
