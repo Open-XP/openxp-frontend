@@ -13,6 +13,11 @@ import {
   FETCH_ALL_CHAT_SESSION_FAIL,
   CHAT_SENT_SUCCESS,
   CHAT_SENT_FAIL,
+  FETCH_RECOMMENDED_TOPIC_SUCCESS,
+  FETCH_RECOMMENDED_TOPIC_FAIL,
+  ASSIGN_CHAT_SESSION_ID,
+  TRIGGER_RELOADING_INDIVIDUAL_CHAT_SESSIONS,
+  NO_CHAT_TRIGGER,
 } from "./Types";
 
 export const explainAnswer = (prompt) => (dispatch, getState) => {
@@ -37,13 +42,14 @@ export const explainAnswer = (prompt) => (dispatch, getState) => {
 export const StartCareerBuddySession = () => (dispatch, getState) => {
   const body = {};
   return axios
-    .post(`${baseurl}/api/ai/sessions/`, body, tokenConfig(getState)) // Pass the empty body
-    .then((res) =>
+    .post(`${baseurl}/api/ai/sessions/`, body, tokenConfig(getState))
+    .then((res) => {
       dispatch({
         type: START_CHAT_SESSION_SUCCESS,
         payload: res.data,
-      })
-    )
+      });
+      return res.data;
+    })
     .catch((err) => {
       dispatch(returnErrors(err.response.data, err.response.status));
       dispatch({ type: START_CHAT_SESSION_FAIL });
@@ -99,3 +105,33 @@ export const ChatInput = (session_id, message) => (dispatch, getState) => {
       throw err;
     });
 };
+
+export const FetchRecommendCareerTopics = () => (dispatch, getState) => {
+  return axios
+    .get(`${baseurl}/api/ai/career-suggestions/`, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: FETCH_RECOMMENDED_TOPIC_SUCCESS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+      dispatch({ type: FETCH_RECOMMENDED_TOPIC_FAIL });
+      throw err;
+    });
+};
+
+export const setChatInstanceID = (id) => ({
+  type: ASSIGN_CHAT_SESSION_ID,
+  payload: id,
+});
+
+export const TriggerIndividualChatSessionsReload = () => ({
+  type: TRIGGER_RELOADING_INDIVIDUAL_CHAT_SESSIONS,
+});
+
+export const NoChatTrigger = () => ({
+  type: NO_CHAT_TRIGGER,
+  payload: true,
+});
