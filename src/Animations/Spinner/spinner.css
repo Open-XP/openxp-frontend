@@ -1,10 +1,14 @@
+.lds-spinner {
+  /* change color here */
+  color: rgba(45, 156, 219, 1);
+}
 .lds-spinner,
 .lds-spinner div,
 .lds-spinner div:after {
   box-sizing: border-box;
 }
 .lds-spinner {
-  color: rgb(59 130 246 / var(--tw-bg-opacity));
+  color: currentColor;
   display: inline-block;
   position: relative;
   width: 80px;
