@@ -14,6 +14,7 @@ import {
   ASSIGN_CHAT_SESSION_ID,
   TRIGGER_RELOADING_INDIVIDUAL_CHAT_SESSIONS,
   NO_CHAT_TRIGGER,
+  CHAT_SESSION_DELETED,
 } from "../Actions/Types";
 
 const initialState = {
@@ -116,6 +117,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         noChatTrigger: payload,
+      };
+    case CHAT_SESSION_DELETED:
+      return {
+        ...state,
+        loadingIndividualChatSessions: true,
+        careerBuddyStarted: false,
       };
     default:
       return state;
