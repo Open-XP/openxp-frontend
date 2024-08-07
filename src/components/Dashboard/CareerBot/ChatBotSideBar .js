@@ -13,7 +13,9 @@ import {
   FetchAllChatSessions,
   FetchIndividualChatSessions,
   setChatInstanceID,
+  DeleteChatSession,
 } from "../../../Actions/AI.js";
+import { EllipsisHorizontalIcon } from "@heroicons/react/20/solid";
 
 class ChatBotSideBar extends Component {
   static propTypes = {
@@ -27,13 +29,31 @@ class ChatBotSideBar extends Component {
     UpdatedInstanceID: PropTypes.string,
   };
 
+  state = {
+    activeSessionId: null,
+    showDropdownId: null,
+  };
+
+  handleDeleteChatSession = (id) => {
+    const { DeleteChatSession, FetchAllChatSessions } = this.props;
+    DeleteChatSession(id)
+      .then(() => {
+        FetchAllChatSessions();
+      })
+      .catch((err) => {
+        console.error("Failed to delete session:", err);
+      });
+    console.log("Deleting ID", id);
+  };
+
   handleContinueChatInstance = (id) => {
     const { FetchIndividualChatSessions, setChatInstanceID } = this.props;
     if (id !== null && id !== undefined) {
       FetchIndividualChatSessions(id);
       setChatInstanceID(id);
-      console.log("Investigaing ID", id);
+      console.log("Investigating ID", id);
     }
+    this.setState({ activeSessionId: id });
   };
 
   handleCreateNewChatInstance = () => {
@@ -50,8 +70,16 @@ class ChatBotSideBar extends Component {
     }
   };
 
+  toggleDropdown = (id) => {
+    this.setState((prevState) => ({
+      showDropdownId: prevState.showDropdownId === id ? null : id,
+    }));
+  };
+
   render() {
     const { allChatSessions } = this.props;
+    const { activeSessionId, showDropdownId } = this.state;
+
     return (
       <div className="fixed max-w-[30rem] h-full w-[23.2rem] bg-white flex flex-col shadow-custom2 z-10 shrink-0">
         <div className="px-[2rem] pt-[2rem] flex flex-col gap-[3.5rem]">
@@ -103,22 +131,50 @@ class ChatBotSideBar extends Component {
         <div className="flex-grow overflow-y-auto px-[2rem] custom-scrollbar">
           <div className="flex flex-col gap-10">
             <div className="flex flex-col">
-              <div className="font-[400] text-[1rem] leading-[1.366rem] text-[#3C3C3C]">
+              <div className="font-[400] text-[1rem] leading-[1.366rem] text-[#3C3C3C] my-3">
                 Today
               </div>
-              <div className="font-[500] font-manropes text-[1.25rem] leading-[1.708rem] flex flex-col gap-[0.8rem] ">
+              <div className="font-[500] font-manropes text-[1.25rem] leading-[1.708rem] flex flex-col">
                 {allChatSessions.map((session) => (
-                  <button
-                    onClick={() => this.handleContinueChatInstance(session.id)}
-                    className="flex flex-col"
+                  <div
                     key={session.id}
+                    className={`flex justify-between items-center py-[0.8rem] px-3 transition-colors rounded-[7px] ${
+                      activeSessionId === session.id
+                        ? "bg-gray-200"
+                        : "hover:bg-gray-100"
+                    }`}
                   >
-                    {session.messages.length > 0 ? (
-                      <p>{session.messages[0].content.slice(0, 20)}</p>
-                    ) : (
-                      <p>No messages for this session.</p>
-                    )}
-                  </button>
+                    <button
+                      onClick={() =>
+                        this.handleContinueChatInstance(session.id)
+                      }
+                      className="flex-1 text-left"
+                    >
+                      {session.messages.length > 0 ? (
+                        <p>{session.messages[0].content.slice(0, 20)}</p>
+                      ) : (
+                        <p>No messages for this session.</p>
+                      )}
+                    </button>
+                    <div className="relative">
+                      <EllipsisHorizontalIcon
+                        className="h-5 w-5 cursor-pointer"
+                        onClick={() => this.toggleDropdown(session.id)}
+                      />
+                      {showDropdownId === session.id && (
+                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                          <div
+                            onClick={() =>
+                              this.handleDeleteChatSession(session.id)
+                            }
+                            className="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
+                          >
+                            Delete
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -160,8 +216,8 @@ const mapDispatchToProps = {
   StartCareerBuddySession,
   FetchAllChatSessions,
   FetchIndividualChatSessions,
-  // ChatInput,
   setChatInstanceID,
+  DeleteChatSession,
 };
 
 export default withRouterHooks(
