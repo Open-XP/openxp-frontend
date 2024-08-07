@@ -26,7 +26,7 @@ class NoChat extends Component {
     if (noChatTrigger) {
       NoChatTrigger();
     }
-    FetchRecommendCareerTopics();
+    // FetchRecommendCareerTopics();
   }
 
   render() {
