@@ -21,10 +21,12 @@ class NoChat extends Component {
   };
 
   componentDidMount() {
-    const { noChatTrigger, NoChatTrigger } = this.props;
+    const { noChatTrigger, NoChatTrigger, FetchRecommendCareerTopics } =
+      this.props;
     if (noChatTrigger) {
       NoChatTrigger();
     }
+    FetchRecommendCareerTopics();
   }
 
   render() {
