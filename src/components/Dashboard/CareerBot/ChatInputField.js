@@ -59,8 +59,8 @@ class InputField extends Component {
     if (loadingIndividualChatSessions && !careerBuddyStarted) {
       StartCareerBuddySession()
         .then((newSession) => {
-          session = newSession.id; // Assign the session id
-          return ChatInput(session, message); // Chain the next promise
+          session = newSession.id;
+          return ChatInput(session, message);
         })
         .then(() => {
           this.setState({ message: "" });
