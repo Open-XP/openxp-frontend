@@ -1,12 +1,20 @@
 import React, { Component } from "react";
 import OpenxpSVG from "../../../../svgs/openxp.js";
-// import Spinner from "../../../../icons/Spinner.png";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouterHooks } from "../../../../withRouters/withRoutersHook";
 import { explainAnswer } from "../../../../Actions/AI";
 import { fetchUserScore } from "../../../../Actions/Quiz";
 import Spinner from "../../../../Animations/Spinner/spinner.js";
+import CopyIcon from "../../../../icons/CopyIcon.png";
+import ReadIcon from "../../../../icons/ReadIcon.png";
+import Ripple from "../../../../Animations/Ripple/Ripple.js";
+import DownloadIcon from "../../../../icons/downloadbutton.png";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ReturnHomeButton from "../../../../icons/ReturnHomeButton.png";
+import { Link } from "react-router-dom";
+import html2canvas from "html2canvas";
 
 class ShowExplanation extends Component {
   static propTypes = {
@@ -17,6 +25,7 @@ class ShowExplanation extends Component {
     completedTestResponse: PropTypes.object.isRequired,
     explainAnswer: PropTypes.func.isRequired,
     explanation: PropTypes.array.isRequired,
+    navigate: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -26,6 +35,7 @@ class ShowExplanation extends Component {
       explanations: {},
       loadingStatus: {},
       loading: false,
+      isSpeaking: false,
     };
   }
 
@@ -40,6 +50,10 @@ class ShowExplanation extends Component {
     }
   }
 
+  handleReturnHome = () => {
+    this.props.navigate("/dashboard");
+  };
+
   toggleVisibility = (index) => {
     this.setState((prevState) => {
       const newVisibility = [...prevState.visibility];
@@ -52,6 +66,20 @@ class ShowExplanation extends Component {
 
       return { visibility: newVisibility };
     });
+  };
+
+  handleTextToSpeech = (text) => {
+    if (speechSynthesis.speaking) {
+      speechSynthesis.cancel();
+      this.setState({ isSpeaking: false });
+    } else {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.onend = () => {
+        this.setState({ isSpeaking: false });
+      };
+      speechSynthesis.speak(utterance);
+      this.setState({ isSpeaking: true });
+    }
   };
 
   handleExplainAnswer = (index) => {
@@ -79,8 +107,25 @@ class ShowExplanation extends Component {
     );
   };
 
+  handleCopy = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      toast.success("Copied to clipboard!");
+    });
+  };
+
+  handleDownload = (index) => {
+    const element = document.querySelector(`#explanation-${index}`);
+    html2canvas(element).then((canvas) => {
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/png");
+      link.download = `explanation_${index}.png`;
+      link.click();
+    });
+  };
+
   render() {
-    const { visibility, explanations, loadingStatus, loading } = this.state;
+    const { visibility, explanations, loadingStatus, loading, isSpeaking } =
+      this.state;
     const { userScores } = this.props;
 
     if (loading) {
@@ -94,9 +139,22 @@ class ShowExplanation extends Component {
     return (
       <div className="w-full h-full flex flex-col justify-center items-center">
         <div className="w-[80%] flex flex-col gap-[4rem]">
-          <div className="flex gap-1 mt-[3.75rem]">
-            <OpenxpSVG className="size-[2rem] text-purple-primary" />
-            <div className="font-[700] text-[1.25rem]">openxp</div>
+          <div className="flex gap-1 mt-[3.75rem] w-full justify-between">
+            <div className="flex">
+              <OpenxpSVG className="size-[2rem] text-purple-primary" />
+              <div className="font-[700] text-[1.25rem]">openxp</div>
+            </div>
+
+            <button
+              onClick={this.handleReturnHome}
+              className="size-[30px] flex relative left-0  justify-center items-center"
+            >
+              <img
+                className="size-[20px] flex"
+                src={ReturnHomeButton}
+                alt="Return Home"
+              />
+            </button>
           </div>
           <div className="flex flex-col gap-[0.1rem]">
             <div className="text-[#EA4335] font-manropes font-[700] text-[4rem] ">
@@ -106,6 +164,7 @@ class ShowExplanation extends Component {
               <div
                 key={index}
                 className="flex flex-col gap-[0.75rem] pb-[1rem]"
+                id={`explanation-${index}`}
               >
                 <div className="flex flex-wrap font-[600] font-manropes text-[2rem] leading-[2.169rem]">
                   {index + 1}. {question.question}
@@ -124,9 +183,53 @@ class ShowExplanation extends Component {
                         </div>
                       </div>
                     ) : (
-                      <div className="w-full px-[2rem] py-[2rem] bg-[#6670850A]/[4%]">
+                      <div
+                        id={`explanation-${index}`}
+                        className="w-full px-[2rem] py-[2rem] bg-[#6670850A]/[4%]"
+                      >
                         <div className="w-full font-manropes text-[2rem] font-[500] leading-[4rem]">
                           {explanations[index]}
+                        </div>
+                        <div className="flex w-full justify-between">
+                          <div className="relative flex w-fit gap-4 justify-center items-center">
+                            <img
+                              src={CopyIcon}
+                              className="cursor-pointer size-[20px]"
+                              onClick={() =>
+                                this.handleCopy(explanations[index])
+                              }
+                            />
+                            <div
+                              className="relative cursor-pointer size-[40px] justify-center items-center flex"
+                              onClick={() =>
+                                this.handleTextToSpeech(explanations[index])
+                              }
+                            >
+                              {isSpeaking ? (
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <Ripple size={40} />
+                                </div>
+                              ) : (
+                                <img
+                                  src={ReadIcon}
+                                  className="w-[20px] h-[20px] object-contain"
+                                />
+                              )}
+                            </div>
+                          </div>
+                          <button
+                            className="flex justify-center items-center w-fit py-[17px] px-[14px] bg-skyblue-secondary gap-[11px] rounded-[41px] cursor-pointer"
+                            onClick={() => this.handleDownload(index)}
+                          >
+                            <div className="font-[600] text-[1.25rem] text-white font-inter">
+                              Download Flashcard{" "}
+                            </div>
+                            <img
+                              className="size-[18px]"
+                              src={DownloadIcon}
+                              alt="Download"
+                            />
+                          </button>
                         </div>
                       </div>
                     )}
@@ -142,6 +245,7 @@ class ShowExplanation extends Component {
             ))}
           </div>
         </div>
+        <ToastContainer />
       </div>
     );
   }
