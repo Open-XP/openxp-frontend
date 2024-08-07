@@ -18,6 +18,7 @@ import {
   ASSIGN_CHAT_SESSION_ID,
   TRIGGER_RELOADING_INDIVIDUAL_CHAT_SESSIONS,
   NO_CHAT_TRIGGER,
+  CHAT_SESSION_DELETED,
 } from "./Types";
 
 export const explainAnswer = (prompt) => (dispatch, getState) => {
@@ -135,3 +136,21 @@ export const NoChatTrigger = () => ({
   type: NO_CHAT_TRIGGER,
   payload: true,
 });
+
+export const DeleteChatSession = (id) => (dispatch, getState) => {
+  return axios
+    .delete(`${baseurl}/api/ai/sessions/delete/${id}/`, tokenConfig(getState))
+    .then(() => {
+      dispatch({
+        type: CHAT_SESSION_DELETED,
+      });
+    })
+    .catch((err) => {
+      if (err.response) {
+        dispatch(returnErrors(err.response.data, err.response.status));
+      } else {
+        dispatch(returnErrors("An unknown error occurred", 500));
+      }
+      throw err;
+    });
+};
