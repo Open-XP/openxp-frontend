@@ -15,17 +15,16 @@ import {
   PASSWORD_RESET_FAILED,
   PASSWORD_RESET_SENT,
   PASSWORD_RESET_NOT_SENT,
+  TOKEN_REFRESH_SUCCESS,
+  TOKEN_REFRESH_FAILED,
 } from "./Types";
-
-// const baseurl = "https://kaput-cannon-obedient-walk-production.pipeops.app";
-export const baseurl = "http://127.0.0.1:8000";
 
 // CHECK TOKEN & LOAD USER
 export const loadUser = () => (dispatch, getState) => {
   dispatch({ type: USER_LOADING });
 
   axios
-    .get(`${baseurl}/api/auth/user/me/`, tokenConfig(getState))
+    .get(`/api/auth/user/me/`, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: USER_LOADED,
@@ -51,18 +50,65 @@ export const login = (email, password) => (dispatch) => {
   const body = JSON.stringify({ email, password });
 
   axios
-    .post(`${baseurl}/api/auth/user/login/`, body, config)
+    .post(`/api/auth/user/login/`, body, config)
     .then((res) => {
+      localStorage.setItem("access", res.data.access);
+      localStorage.setItem("refresh", res.data.refresh);
+
       dispatch({
         type: LOGIN_SUCCESS,
         payload: res.data,
       });
     })
     .catch((err) => {
-      dispatch(returnErrors(err.response.data, err.response.status));
+      if (err.response) {
+        dispatch(returnErrors(err.response.data, err.response.status));
+      } else if (err.request) {
+        dispatch(returnErrors("No response received from server", 500));
+      } else {
+        dispatch(returnErrors("Error in setting up the request", 500));
+      }
+
       dispatch({
         type: LOGIN_FAIL,
       });
+    });
+};
+
+// REFRESH TOKEN
+export const refreshToken = () => (dispatch, getState) => {
+  const refresh = localStorage.getItem("refresh");
+
+  if (!refresh) {
+    dispatch({ type: TOKEN_REFRESH_FAILED });
+    return Promise.reject("No refresh token available");
+  }
+
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  const body = JSON.stringify({ refresh });
+
+  return axios
+    .post("/api/auth/user/token/refresh/", body, config)
+    .then((res) => {
+      localStorage.setItem("access", res.data.access);
+
+      dispatch({
+        type: TOKEN_REFRESH_SUCCESS,
+        payload: res.data,
+      });
+
+      return res.data.access;
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+      dispatch({ type: TOKEN_REFRESH_FAILED });
+      dispatch(logout());
+      return Promise.reject(err);
     });
 };
 
@@ -86,7 +132,7 @@ export const registers =
     });
 
     axios
-      .post(`${baseurl}/api/auth/user/register/`, body, config)
+      .post(`/api/auth/user/register/`, body, config)
       .then((res) => {
         dispatch({
           type: REGISTER_SUCCESS,
@@ -103,18 +149,26 @@ export const registers =
 
 // LOGOUT USER
 export const logout = () => (dispatch, getState) => {
+  const refresh = localStorage.getItem("refresh");
+  const body = refresh ? JSON.stringify({ refresh }) : null;
+
   axios
-    .get(`${baseurl}/api/auth/user/logout/`, tokenConfig(getState))
-    .then((res) => {
+    .post("/api/auth/user/logout/", body, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("access")}`,
+      },
+    })
+    .then(() => {
+      localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
       dispatch({ type: LOGOUT_SUCCESS });
     })
     .catch((err) => {
-      if (err.response && err.response.status === 403) {
-        dispatch({ type: LOGOUT_SUCCESS });
-      } else {
-        dispatch(returnErrors(err.response.data, err.response.status));
-        dispatch({ type: LOGOUT_FAILED });
-      }
+      console.error("Logout error:", err);
+      localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
+      dispatch({ type: LOGOUT_SUCCESS });
     });
 };
 
@@ -131,7 +185,7 @@ export const resetpassword = (email) => (dispatch) => {
   const body = JSON.stringify({ email });
 
   axios
-    .post(`${baseurl}/api/auth/user/reset-password/`, body, config)
+    .post(`/api/auth/user/reset-password/`, body, config)
     .then((res) => {
       dispatch({
         type: PASSWORD_RESET_SENT,
@@ -161,7 +215,7 @@ export const confirmPassword =
 
     axios
       .post(
-        `${baseurl}/api/auth/user/password-reset-confirm/${uidb64}/${token}/`,
+        `/api/auth/user/password-reset-confirm/${uidb64}/${token}/`,
         body,
         config
       )
@@ -181,7 +235,7 @@ export const confirmPassword =
 
 // Setup config with token - helper function
 export const tokenConfig = (getState) => {
-  const token = getState().auth.token;
+  const token = localStorage.getItem("access");
 
   const config = {
     headers: {
@@ -190,7 +244,7 @@ export const tokenConfig = (getState) => {
   };
 
   if (token) {
-    config.headers["Authorization"] = `Token ${token}`;
+    config.headers["Authorization"] = `Bearer ${token}`;
   }
 
   return config;
