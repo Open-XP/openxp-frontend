@@ -2,7 +2,6 @@ import { tokenConfig } from "./Auth";
 // import axios from "axios";
 import axios from "../Utils/axios";
 import { returnErrors } from "./Messages";
-import { baseurl } from "./Auth";
 import {
   FETCH_ALL_SCHEDULES_SUCCESS,
   FETCH_ALL_SCHEDULES_FAIL,
@@ -19,7 +18,7 @@ import {
 // Action to fetch all schedules
 export const fetchAllSchedules = () => (dispatch, getState) => {
   return axios
-    .get(`${baseurl}/api/examscheduler/exams/`, tokenConfig(getState))
+    .get(`/api/examscheduler/exams/`, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: FETCH_ALL_SCHEDULES_SUCCESS,
@@ -35,7 +34,7 @@ export const fetchAllSchedules = () => (dispatch, getState) => {
 // Action to fetch individual schedule
 export const fetchIndividualSchedule = (id) => (dispatch, getState) => {
   axios
-    .get(`${baseurl}/api/examscheduler/exams/${id}/`, tokenConfig(getState))
+    .get(`/api/examscheduler/exams/${id}/`, tokenConfig(getState))
     .then((res) =>
       dispatch({
         type: FETCH_INDIVIDUAL_SCHEDULES_SUCCESS,
@@ -62,7 +61,7 @@ export const createSchedule =
     console.log("This is the body".body);
 
     axios
-      .post(`${baseurl}/api/examscheduler/exams/`, body, tokenConfig(getState))
+      .post(`/api/examscheduler/exams/`, body, tokenConfig(getState))
       .then((res) => {
         dispatch({
           type: CREATE_SCHEDULE_SUCCESS,
@@ -87,11 +86,7 @@ export const updateSchedule =
     });
 
     axios
-      .put(
-        `${baseurl}/api/examscheduler/exams/${id}/`,
-        body,
-        tokenConfig(getState)
-      )
+      .put(`/api/examscheduler/exams/${id}/`, body, tokenConfig(getState))
       .then((res) => {
         dispatch({
           type: UPDATE_SCHEDULE_SUCCESS,
@@ -107,7 +102,7 @@ export const updateSchedule =
 // Action to delete a schedule
 export const deleteSchedule = (id) => (dispatch, getState) => {
   return axios
-    .delete(`${baseurl}/api/examscheduler/exams/${id}/`, tokenConfig(getState))
+    .delete(`/api/examscheduler/exams/${id}/`, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: DELETE_SCHEDULE_SUCCESS,
