@@ -39,6 +39,7 @@ const initialState = {
   subjectQuestions: [],
   loading: false,
   error: null,
+  testInstances: null,
 };
 
 export default function (state = initialState, action) {
