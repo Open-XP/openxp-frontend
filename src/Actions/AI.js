@@ -1,5 +1,5 @@
 import axios from "../Utils/axios";
-import { baseurl } from "./Auth";
+import { baseurl } from "./BaseUrls";
 import { tokenConfig } from "./Auth";
 import { returnErrors } from "./Messages";
 import {
@@ -25,7 +25,7 @@ export const explainAnswer = (prompt) => (dispatch, getState) => {
   const body = JSON.stringify({ prompt });
   console.log("body", body);
   return axios
-    .post(`${baseurl}/api/ai/explain_answers/`, body, tokenConfig(getState))
+    .post(`/api/ai/explain_answers/`, body, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: EXPLAIN_ANSWER_SUCCESS,
@@ -43,7 +43,7 @@ export const explainAnswer = (prompt) => (dispatch, getState) => {
 export const StartCareerBuddySession = () => (dispatch, getState) => {
   const body = {};
   return axios
-    .post(`${baseurl}/api/ai/sessions/`, body, tokenConfig(getState))
+    .post(`/api/ai/sessions/`, body, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: START_CHAT_SESSION_SUCCESS,
@@ -60,7 +60,7 @@ export const StartCareerBuddySession = () => (dispatch, getState) => {
 
 export const FetchIndividualChatSessions = (id) => (dispatch, getState) => {
   return axios
-    .get(`${baseurl}/api/ai/sessions/${id}/`, tokenConfig(getState))
+    .get(`/api/ai/sessions/${id}/`, tokenConfig(getState))
     .then((res) =>
       dispatch({
         type: FETCH_INDIVIDUAL_CHAT_SESSIONS_SUCCESS,
@@ -76,7 +76,7 @@ export const FetchIndividualChatSessions = (id) => (dispatch, getState) => {
 
 export const FetchAllChatSessions = () => (dispatch, getState) => {
   return axios
-    .get(`${baseurl}/api/ai/sessions/`, tokenConfig(getState))
+    .get(`/api/ai/sessions/`, tokenConfig(getState))
     .then((res) =>
       dispatch({
         type: FETCH_ALL_CHAT_SESSION_SUCCESS, // Correct the typo here
@@ -93,7 +93,7 @@ export const FetchAllChatSessions = () => (dispatch, getState) => {
 export const ChatInput = (session_id, message) => (dispatch, getState) => {
   const body = JSON.stringify({ message });
   return axios
-    .post(`${baseurl}/api/ai/chat/${session_id}/`, body, tokenConfig(getState))
+    .post(`/api/ai/chat/${session_id}/`, body, tokenConfig(getState))
     .then((res) =>
       dispatch({
         type: CHAT_SENT_SUCCESS,
@@ -109,7 +109,7 @@ export const ChatInput = (session_id, message) => (dispatch, getState) => {
 
 export const FetchRecommendCareerTopics = () => (dispatch, getState) => {
   return axios
-    .get(`${baseurl}/api/ai/career-suggestions/`, tokenConfig(getState))
+    .get(`/api/ai/career-suggestions/`, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: FETCH_RECOMMENDED_TOPIC_SUCCESS,
@@ -139,7 +139,7 @@ export const NoChatTrigger = () => ({
 
 export const DeleteChatSession = (id) => (dispatch, getState) => {
   return axios
-    .delete(`${baseurl}/api/ai/sessions/delete/${id}/`, tokenConfig(getState))
+    .delete(`/api/ai/sessions/delete/${id}/`, tokenConfig(getState))
     .then(() => {
       dispatch({
         type: CHAT_SESSION_DELETED,
