@@ -1,9 +1,7 @@
 import { tokenConfig } from "./Auth";
-import axios from "axios";
-// import axios from "../Utils/axios";
+// import axios from "axios";
+import axios from "../Utils/axios";
 import { returnErrors } from "./Messages";
-import { persistor } from "../Store/Store";
-import { baseurl } from "./Auth";
 import {
   START_TEST_SUCCESS,
   START_TEST_FAIL,
@@ -43,7 +41,7 @@ export const startTest =
 
     try {
       const res = await axios.post(
-        `${baseurl}/api/quiz/exams/start-test/`,
+        `/api/quiz/exams/start-test/`,
         body,
         tokenConfig(getState)
       );
@@ -69,7 +67,7 @@ export const fetchSubjectQuestions =
     // Return the Axios promise chain
     return axios
       .get(
-        `${baseurl}/api/quiz/exams/questions/${test_instance_id}/`,
+        `/api/quiz/exams/questions/${test_instance_id}/`,
         tokenConfig(getState)
       )
       .then((res) => {
@@ -92,7 +90,7 @@ export const fetchIndividualSubjectQuestion =
   (test_instance_id, question_id) => (dispatch, getState) => {
     axios
       .get(
-        `${baseurl}/api/quiz/exams/test-instances/${test_instance_id}/questions/${question_id}/`,
+        `/api/quiz/exams/test-instances/${test_instance_id}/questions/${question_id}/`,
         tokenConfig(getState)
       )
       .then((res) =>
@@ -116,11 +114,7 @@ export const submitAnswer =
       selected_option: selected_option,
     });
     axios
-      .post(
-        `${baseurl}/api/quiz/exams/submit-answer/`,
-        body,
-        tokenConfig(getState)
-      )
+      .post(`/api/quiz/exams/submit-answer/`, body, tokenConfig(getState))
       .then((res) =>
         dispatch({
           type: SUBMIT_ANSWER_SUCCESS,
@@ -137,7 +131,7 @@ export const submitAnswer =
 export const completeTest = (test_instance_id) => (dispatch, getState) => {
   axios
     .patch(
-      `${baseurl}/api/quiz/exams/complete-test/${test_instance_id}/`,
+      `/api/quiz/exams/complete-test/${test_instance_id}/`,
       {},
       tokenConfig(getState)
     )
@@ -156,7 +150,7 @@ export const completeTest = (test_instance_id) => (dispatch, getState) => {
 // Action to fetch completed tests
 export const fetchCompletedTests = () => (dispatch, getState) => {
   axios
-    .get(`${baseurl}/api/quiz/exams/completed-tests/`, tokenConfig(getState))
+    .get(`/api/quiz/exams/completed-tests/`, tokenConfig(getState))
     .then((res) =>
       dispatch({
         type: FETCH_COMPLETED_TESTS_SUCCESS,
@@ -172,7 +166,7 @@ export const fetchCompletedTests = () => (dispatch, getState) => {
 // Action to fetch all test instances
 export const fetchAllTestInstances = () => (dispatch, getState) => {
   axios
-    .get(`${baseurl}/api/exams/all-test-instances/`, tokenConfig(getState))
+    .get(`/api/exams/all-test-instances/`, tokenConfig(getState))
     .then((res) =>
       dispatch({
         type: FETCH_ALL_TEST_INSTANCES_SUCCESS,
@@ -190,7 +184,7 @@ export const fetchUserScore = (test_instance_id) => (dispatch, getState) => {
   return new Promise((resolve, reject) => {
     axios
       .get(
-        `${baseurl}/api/quiz/exams/user-score/${test_instance_id}/`,
+        `/api/quiz/exams/user-score/${test_instance_id}/`,
         tokenConfig(getState)
       )
       .then((res) => {
@@ -213,10 +207,7 @@ export const fetchUserScore = (test_instance_id) => (dispatch, getState) => {
 // Action to get test results
 export const fetchTestResults = (test_instance_id) => (dispatch, getState) => {
   axios
-    .get(
-      `${baseurl}/api/exams/${test_instance_id}/results/`,
-      tokenConfig(getState)
-    )
+    .get(`/api/exams/${test_instance_id}/results/`, tokenConfig(getState))
     .then((res) =>
       dispatch({
         type: FETCH_TEST_RESULTS_SUCCESS,
@@ -232,7 +223,7 @@ export const fetchTestResults = (test_instance_id) => (dispatch, getState) => {
 // Action to get total study time
 export const fetchTotalStudyTime = () => (dispatch, getState) => {
   axios
-    .get(`${baseurl}/api/quiz/exams/total-study-time/`, tokenConfig(getState))
+    .get(`/api/quiz/exams/total-study-time/`, tokenConfig(getState))
     .then((res) =>
       dispatch({
         type: FETCH_TOTAL_STUDY_TIME_SUCCESS,
@@ -248,7 +239,7 @@ export const fetchTotalStudyTime = () => (dispatch, getState) => {
 // Action to get all subjects
 export const fetchAllSubjects = () => (dispatch, getState) => {
   axios
-    .get(`${baseurl}/api/quiz/subjects/`, tokenConfig(getState))
+    .get(`/api/quiz/subjects/`, tokenConfig(getState))
     .then((res) =>
       dispatch({
         type: FETCH_ALL_SUBJECTS_SUCCESS,
@@ -266,7 +257,7 @@ export const deleteTestInstance =
   (test_instance_id) => (dispatch, getState) => {
     axios
       .delete(
-        `${baseurl}/api/quiz/exams/${test_instance_id}/delete/`,
+        `/api/quiz/exams/${test_instance_id}/delete/`,
         tokenConfig(getState)
       )
       .then(() => {
