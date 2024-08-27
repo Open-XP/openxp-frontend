@@ -83,21 +83,21 @@ export default function (state = initialState, action) {
     case PASSWORD_RESET_SUCCESS:
       return {
         ...state,
-        resetStatus: action.payload
+        resetStatus: action.payload,
       };
     case PASSWORD_RESET_FAILED:
       return {
         ...state,
-        resetStatus: action.payload
+        resetStatus: action.payload,
       };
     case PASSWORD_RESET_SENT:
       return {
         ...state,
-        passwordSent: action.payload
+        passwordSent: action.payload,
       };
     case PASSWORD_RESET_NOT_SENT:
       return {
-        passwordSent: action.payload
+        passwordSent: action.payload,
       };
     default:
       return state;
