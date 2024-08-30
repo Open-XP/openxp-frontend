@@ -1,5 +1,6 @@
 import axios from "../Utils/axios";
 // import axios from "axios";
+import { default as MyAxios } from "axios";
 import { returnErrors } from "./Messages";
 import {
   USER_LOADED,
@@ -52,9 +53,6 @@ export const login = (email, password) => (dispatch) => {
   axios
     .post(`/api/auth/user/login/`, body, config)
     .then((res) => {
-      localStorage.setItem("access", res.data.access);
-      localStorage.setItem("refresh", res.data.refresh);
-
       dispatch({
         type: LOGIN_SUCCESS,
         payload: res.data,
@@ -76,39 +74,85 @@ export const login = (email, password) => (dispatch) => {
 };
 
 // REFRESH TOKEN
-export const refreshToken = () => (dispatch, getState) => {
+export const refreshToken = () => async (dispatch) => {
   const refresh = localStorage.getItem("refresh");
 
   if (!refresh) {
+    console.error("No refresh token available.");
     dispatch({ type: TOKEN_REFRESH_FAILED });
     return Promise.reject("No refresh token available");
   }
 
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
+  try {
+    const res = await axios.post("/api/auth/user/token/refresh/", { refresh });
+    const newAccessToken = res.data.access;
+    const newRefreshToken = res.data.refresh;
+    console.log("Tokens refreshed:", newAccessToken, newRefreshToken);
 
-  const body = JSON.stringify({ refresh });
+    // Store the new access token
+    localStorage.setItem("access", newAccessToken);
+    localStorage.setItem("refresh", newRefreshToken);
 
-  return axios
-    .post("/api/auth/user/token/refresh/", body, config)
-    .then((res) => {
-      localStorage.setItem("access", res.data.access);
+    // Dispatch a success action
+    dispatch({
+      type: TOKEN_REFRESH_SUCCESS,
+      payload: res.data,
+    });
 
-      dispatch({
-        type: TOKEN_REFRESH_SUCCESS,
-        payload: res.data,
-      });
+    return { newAccessToken, newRefreshToken }; // Return the new access and refresh token
+  } catch (err) {
+    console.error(
+      "Token refresh failed:",
+      err.response ? err.response.data : err.message
+    );
 
-      return res.data.access;
+    // Handle specific error cases
+    if (err.response && err.response.status === 401) {
+      console.log("Refresh token is invalid or expired. Logging out.");
+      dispatch(logout()); // Trigger logout if refresh fails
+    }
+
+    // Dispatch a failure action
+    dispatch({ type: TOKEN_REFRESH_FAILED });
+    return Promise.reject(err);
+  }
+};
+
+// LOGOUT USER
+export const logout = () => (dispatch) => {
+  const access = localStorage.getItem("access");
+  const body = access ? JSON.stringify({ access }) : null;
+
+  axios
+    .post("/api/auth/user/logout/", body, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then((response) => {
+      console.log("Logout successful:", response.data);
+      // Perform any additional success handling here if needed
     })
     .catch((err) => {
-      dispatch(returnErrors(err.response.data, err.response.status));
-      dispatch({ type: TOKEN_REFRESH_FAILED });
-      dispatch(logout());
-      return Promise.reject(err);
+      console.error(
+        "Logout failed:",
+        err.response ? err.response.data : err.message
+      );
+      // Handle the case where the logout request fails
+      if (err.response && err.response.status === 401) {
+        console.log(
+          "Token was already invalid or expired. Proceeding with cleanup."
+        );
+      }
+    })
+    .finally(() => {
+      // Always clear local storage and update state, regardless of server response
+      localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
+      dispatch({ type: LOGOUT_SUCCESS });
+      console.log(
+        "Logout process completed. Tokens removed and state cleared."
+      );
     });
 };
 
@@ -146,31 +190,6 @@ export const registers =
         });
       });
   };
-
-// LOGOUT USER
-export const logout = () => (dispatch, getState) => {
-  const refresh = localStorage.getItem("refresh");
-  const body = refresh ? JSON.stringify({ refresh }) : null;
-
-  axios
-    .post("/api/auth/user/logout/", body, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("access")}`,
-      },
-    })
-    .then(() => {
-      localStorage.removeItem("access");
-      localStorage.removeItem("refresh");
-      dispatch({ type: LOGOUT_SUCCESS });
-    })
-    .catch((err) => {
-      console.error("Logout error:", err);
-      localStorage.removeItem("access");
-      localStorage.removeItem("refresh");
-      dispatch({ type: LOGOUT_SUCCESS });
-    });
-};
 
 // RESET PASSWORD
 export const resetpassword = (email) => (dispatch) => {
