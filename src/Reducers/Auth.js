@@ -37,7 +37,8 @@ export default function (state = initialState, action) {
         user: action.payload,
       };
     case LOGIN_SUCCESS:
-      localStorage.setItem("token", action.payload.token);
+      localStorage.setItem("access", action.payload.access);
+      localStorage.setItem("refresh", action.payload.refresh);
       return {
         ...state,
         ...action.payload,
@@ -63,7 +64,8 @@ export default function (state = initialState, action) {
       };
     case LOGIN_FAIL:
     case LOGOUT_SUCCESS:
-      localStorage.clear("token");
+      localStorage.clear("access");
+      localStorage.clear("refresh");
       return {
         ...state,
         token: null,
