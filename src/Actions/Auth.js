@@ -122,16 +122,16 @@ export const refreshToken = () => async (dispatch) => {
 export const logout = () => (dispatch) => {
   const access = localStorage.getItem("access");
   const body = access ? JSON.stringify({ access }) : null;
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
 
   axios
-    .post("/api/auth/user/logout/", body, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    .post("/api/auth/user/logout/", body, config) // Removed the extra curly braces around config
     .then((response) => {
-      console.log("Logout successful:", response.data);
-      // Perform any additional success handling here if needed
+      dispatch({ type: LOGOUT_SUCCESS, payload: response.data });
     })
     .catch((err) => {
       console.error(
