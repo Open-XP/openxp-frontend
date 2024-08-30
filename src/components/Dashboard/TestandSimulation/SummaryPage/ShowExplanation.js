@@ -83,10 +83,25 @@ class ShowExplanation extends Component {
   };
 
   handleExplainAnswer = (index) => {
-    const { userScores, explainAnswer } = this.props;
+    const { userScores, explainAnswer, explanation } = this.props;
+
+    // Ensure userScores and incorrect_questions are defined
+    if (
+      !userScores ||
+      !userScores.incorrect_questions ||
+      !userScores.incorrect_questions[index]
+    ) {
+      return;
+    }
+
     const item = userScores.incorrect_questions[index];
-    const question = item.question;
-    const options = ` ${item.option_A} ${item.option_B} ${item.option_C} ${item.option_D}`;
+    const question = item?.question || "Question not available";
+    const optionA = item?.option_A || "Option A not available";
+    const optionB = item?.option_B || "Option B not available";
+    const optionC = item?.option_C || "Option C not available";
+    const optionD = item?.option_D || "Option D not available";
+
+    const options = `${optionA} ${optionB} ${optionC} ${optionD}`;
     const text =
       "Justify why the selected answer is correct and explain in details";
 
@@ -94,17 +109,22 @@ class ShowExplanation extends Component {
       loadingStatus: { ...prevState.loadingStatus, [index]: true },
     }));
 
-    explainAnswer(`${text + `:`}${` ` + question}${` ` + options}`).finally(
-      () => {
+    explainAnswer(`${text}: ${question} ${options}`)
+      .catch((error) => {
+        console.error("Error explaining answer:", error);
+        // Optionally handle the error, such as displaying a message to the user
+      })
+      .finally(() => {
         this.setState((prevState) => ({
           loadingStatus: { ...prevState.loadingStatus, [index]: false },
           explanations: {
             ...prevState.explanations,
-            [index]: this.props.explanation.choices[0].message.content,
+            [index]:
+              explanation?.choices?.[0]?.message?.content ||
+              "Explanation not available",
           },
         }));
-      }
-    );
+      });
   };
 
   handleCopy = (text) => {
