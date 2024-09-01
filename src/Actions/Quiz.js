@@ -13,8 +13,6 @@ import {
   FETCH_COMPLETED_TESTS_FAIL,
   FETCH_ALL_TEST_INSTANCES_SUCCESS,
   FETCH_ALL_TEST_INSTANCES_FAIL,
-  RETRIEVE_INDIVIDUAL_QUESTION_SUCCESS,
-  RETRIEVE_INDIVIDUAL_QUESTION_FAIL,
   FETCH_USER_SCORE_SUCCESS,
   FETCH_USER_SCORE_FAIL,
   FETCH_TEST_RESULTS_SUCCESS,
@@ -28,6 +26,8 @@ import {
   FETCH_INDIVIDUAL_SUBJECT_QUESTION_SUCCESS,
   FETCH_INDIVIDUAL_SUBJECT_QUESTION_FAIL,
   RESET_QUESTIONS_ON_LEAVE_PAGE,
+  FETCH_GRAPH_DATA_SUCCESS,
+  FETCH_GRAPH_DATA_FAIL,
 } from "./Types";
 
 // Action to start a test
@@ -50,21 +50,17 @@ export const startTest =
         payload: res.data,
       });
 
-      // Optionally persist state immediately after starting the test
-      // persistor.persist();
-
-      return res.data; // This return allows the component to use the response data, including the id
+      return res.data;
     } catch (err) {
       dispatch(returnErrors(err.response.data, err.response.status));
       dispatch({ type: START_TEST_FAIL });
-      throw err; // Propagate the error for further handling in the component
+      throw err;
     }
   };
 
 // Action to fetch subject questions
 export const fetchSubjectQuestions =
   (test_instance_id) => (dispatch, getState) => {
-    // Return the Axios promise chain
     return axios
       .get(
         `/api/quiz/exams/questions/${test_instance_id}/`,
@@ -75,12 +71,11 @@ export const fetchSubjectQuestions =
           type: FETCH_SUBJECT_QUESTIONS_SUCCESS,
           payload: res.data,
         });
-        return res; // Optional: return response to the caller
+        return res;
       })
       .catch((err) => {
         dispatch(returnErrors(err.response.data, err.response.status));
         dispatch({ type: FETCH_SUBJECT_QUESTIONS_FAIL });
-        // Optional: throw an error to be caught by the caller
         throw err;
       });
   };
@@ -192,13 +187,11 @@ export const fetchUserScore = (test_instance_id) => (dispatch, getState) => {
           type: FETCH_USER_SCORE_SUCCESS,
           payload: res.data,
         });
-        console.log("fetchUserScore SUCCESS:", res.data); // Debugging
         resolve(res.data);
       })
       .catch((err) => {
         dispatch(returnErrors(err.response.data, err.response.status));
         dispatch({ type: FETCH_USER_SCORE_FAIL });
-        console.log("fetchUserScore FAIL:", err); // Debugging
         reject(err);
       });
   });
@@ -269,3 +262,22 @@ export const deleteTestInstance =
         dispatch(returnErrors(err.response.data, err.response.status));
       });
   };
+
+// Fetch user test scores for graph data
+export const fetchGraphData = (period, subject) => (dispatch, getState) => {
+  axios
+    .get(
+      `/api/quiz/exams/average-scores/?filter=${period}&subject=${subject}`,
+      tokenConfig(getState)
+    )
+    .then((res) => {
+      dispatch({
+        type: FETCH_GRAPH_DATA_SUCCESS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+      dispatch({ type: FETCH_GRAPH_DATA_FAIL });
+    });
+};
