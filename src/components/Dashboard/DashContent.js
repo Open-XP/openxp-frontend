@@ -12,6 +12,7 @@ import AddSchedule from "./SchedulePlan/ScheduleComponent/AddSchedule";
 import _SummaryPage from "./TestandSimulation/SummaryPage/_SummaryPage";
 import ShowExplanation from "./TestandSimulation/SummaryPage/ShowExplanation";
 import CareerBot from "./CareerBot/CareerBot";
+import PersonalTutorModule from "./PersonalTutor/PersonalTutorModule/PersonalTutorModule";
 
 export function DashContent() {
   return (
@@ -86,6 +87,21 @@ export function DashContent() {
                 <Void />
                 <div className="flex w-full justify-center mt-[8rem]">
                   <AddSchedule />
+                </div>
+              </div>
+              <SideBar />
+            </div>
+          }
+        />
+        <Route
+          path="personal-tutor"
+          element={
+            <div>
+              <DashboardNavBar className="" />
+              <div className="flex">
+                <Void />
+                <div className="flex w-full justify-center mt-[8rem]">
+                  <PersonalTutorModule />
                 </div>
               </div>
               <SideBar />
