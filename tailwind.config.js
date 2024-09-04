@@ -11,6 +11,8 @@ module.exports = {
         sans: ["Open Sans", "ui-sans-serif", "system-ui"],
         inter: ["Inter", "sans-serif"],
         manropes: ["Manrope", "sans-serif"],
+        SFPro: ["SF Pro Display", "sans-serif"],
+        geist: ["Geist", "sans-serif"],
       },
       boxShadow: {
         custom: "0 1px 0 rgba(0, 0, 0, 0.5)",
