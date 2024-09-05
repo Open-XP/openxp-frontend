@@ -14,21 +14,25 @@ import ExplainFurtherPage from "../ExplainFurtherPage/ExplainFurtherPage";
 class PersonalTutorInnerScreen extends Component {
   render() {
     return (
-      <div className="flex flex-col w-full h-full">
-        <div className="fixed w-full h-[5.25rem] px-[4.5%] flex justify-between shadow-custom items-center z-10 bg-white">
-          <div className="flex h-[2.063rem] items-center gap-[0.813rem]">
-            <OpenxpSVG className="w-[1.813rem] h-full text-purple-primary" />
-            <div className="font-sans h-full font-[700] text-[1.25rem]">
-              Openxp
+      <div className="flex flex-col w-full min-h-screen">
+        <div className="w-full h-[5.25rem]">
+          <div className="fixed w-full h-[5.25rem] px-[4.5%] flex justify-between shadow-custom items-center z-10 bg-white">
+            <div className="flex h-[2.063rem] items-center gap-[0.813rem]">
+              <OpenxpSVG className="w-[1.813rem] h-full text-purple-primary" />
+              <div className="font-sans h-full font-[700] text-[1.25rem]">
+                Openxp
+              </div>
+            </div>
+            <div className="flex h-[2rem] gap-[2.063rem]">
+              <img className="size-[2rem]" src={MagnifyingLenseSVG} />
+              <img className="size-[2rem]" src={NotificationBellSVG} />
             </div>
           </div>
-          <div className="flex h-[2rem] gap-[2.063rem]">
-            <img className="size-[2rem]" src={MagnifyingLenseSVG} />
-            <img className="size-[2rem]" src={NotificationBellSVG} />
-          </div>
         </div>
-        <div className="flex flex-col w-full h-full bg-[#F9FAFB] shadow-custom2 justify-center items-center pt-[10rem]">
-          <div className="flex flex-col w-[91%] h-lvh mb-[5rem] bg-white px-[4%] pt-[4%] gap-[1.5rem]">
+
+        {/* Updated the height to min-h-screen */}
+        <div className="flex flex-col w-full min-h-screen bg-[#F9FAFB] shadow-custom2 justify-center items-center py-[10rem]">
+          <div className="flex flex-col w-[91%] bg-white px-[4%] gap-[1.5rem]">
             <div className="flex flex-col w-full item-center">
               <img className="size-[2.625rem]" src={ArrowLeftSVG} />
               <div className="flex py-[1rem] justify-between gap-[1rem]">
@@ -43,6 +47,7 @@ class PersonalTutorInnerScreen extends Component {
                 </button>
               </div>
             </div>
+
             <div className="flex flex-col gap-[1rem]">
               <div className="flex flex-col w-full">
                 <div
@@ -56,6 +61,7 @@ class PersonalTutorInnerScreen extends Component {
                 1/9
               </div>
             </div>
+
             <div>
               <div className="font-[700] font-SFPro text-[3rem] leading-[3.58rem]">
                 The Definition of Motion
@@ -70,10 +76,12 @@ class PersonalTutorInnerScreen extends Component {
                 non-uniform, where the speed or direction changes.
               </div>
             </div>
+
             <SimpleExplanationLoader />
             <GiveSimpleExplanation />
             <ReferenceImage />
             <ExplainFurtherPage />
+
             <div className="flex flex-col gap-[0.625rem]">
               <button className="bg-[#E8EDF3] w-[60%] 2xl:w-[40%] h-[5.313rem] font-geist font-[300] text-[2rem] rounded-[0.813rem]">
                 Give me a simpler explanation
@@ -87,6 +95,7 @@ class PersonalTutorInnerScreen extends Component {
             </div>
           </div>
         </div>
+
         <div className="fixed font-geist font-[500] text-[1.5rem] flex gap-[0.438rem] w-[33rem] h-[2.125rem] leading-[1.86rem] z-30 top-[80%] left-0 right-0 bottom-0 m-auto justify-center items-center">
           <img className="size-[1.5rem] px-13px py-4px" src={LeftArrowSVG} />
           <div className="size-[2.125rem] py-[4px] text-center">1</div>
