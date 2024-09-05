@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import HumanMetaFigureSVG from "../../../../svgs/HumanMetaFigureSVG.svg";
 import UpAndDownStuff from "../../../../svgs/UpAndDownStuff.svg";
+import { withRouterHooks } from "../../../../withRouters/withRoutersHook";
+import { Link } from "react-router-dom";
 
 class PersonalTutorModule extends Component {
   render() {
@@ -86,9 +88,11 @@ class PersonalTutorModule extends Component {
                 </div>
               </div>
             </div>
-            <button className="flex justify-center items-center w-full h-[4.25rem] bg-[#EB6C11] rounded-[0.688rem] text-[2rem] font-[700] font-geist text-white">
-              Start Learning
-            </button>
+            <Link to="inner">
+              <button className="flex justify-center items-center w-full h-[4.25rem] bg-[#EB6C11] rounded-[0.688rem] text-[2rem] font-[700] font-geist text-white">
+                Start Learning
+              </button>
+            </Link>
           </div>
         </div>
       </div>
