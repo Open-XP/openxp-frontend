@@ -13,6 +13,7 @@ import _SummaryPage from "./TestandSimulation/SummaryPage/_SummaryPage";
 import ShowExplanation from "./TestandSimulation/SummaryPage/ShowExplanation";
 import CareerBot from "./CareerBot/CareerBot";
 import PersonalTutorModule from "./PersonalTutor/PersonalTutorModule/PersonalTutorModule";
+import PersonalTutorInnerScreen from "./PersonalTutor/PersonalTutorInnerScreen/PersonalTutorInnerScreen";
 
 export function DashContent() {
   return (
@@ -113,6 +114,10 @@ export function DashContent() {
         <Route path="_summary" element={<_SummaryPage />} />
         <Route path="explanation" element={<ShowExplanation />} />
         <Route path="career-bot" element={<CareerBot />} />
+        <Route
+          path="personal-tutor/inner"
+          element={<PersonalTutorInnerScreen />}
+        />
       </Routes>
     </div>
   );
