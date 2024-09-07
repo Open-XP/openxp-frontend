@@ -15,6 +15,18 @@ import {
   TRIGGER_RELOADING_INDIVIDUAL_CHAT_SESSIONS,
   NO_CHAT_TRIGGER,
   CHAT_SESSION_DELETED,
+  SUBJECT_FETCH_SUCCESS,
+  SUBJECT_FETCH_FAIL,
+  START_PERSONALIZED_STUDY_SUCCESS,
+  START_PERSONALIZED_STUDY_FAIL,
+  GENERATED_PERSONAL_NOTE_SUCCESS,
+  GENERATED_PERSONAL_NOTE_FAILED,
+  FETCH_GENERATED_PERSONAL_NOTES_SUCCESS,
+  FETCH_GENERATED_PERSONAL_NOTES_FAIL,
+  FLUSH_ALL_AI_SUCCESS,
+  FLUSH_ALL_AI_FAIL,
+  GENERATED_DATAILED_PERSONALIZE_NOTE_SUCCESS,
+  GENERATED_DETAILED_PERSONALIZE_NOTE_FAIL,
 } from "../Actions/Types";
 
 const initialState = {
@@ -32,6 +44,26 @@ const initialState = {
   chatInstanceID: null,
   UpdatedInstanceID: null,
   noChatTrigger: false,
+  subjects: [],
+  personalStudyID: {},
+
+  generatingPersonalizedLearning: true,
+  introduction: null,
+  learningObjectives: null,
+  learningObjectivesOne: null,
+  learningObjectivesTwo: null,
+  learningObjectivesThree: null,
+  learningObjectivesFour: null,
+  learningObjectivesFive: null,
+  learningObjectivesSix: null,
+  learningObjectivesSeven: null,
+  learningObjectivesEight: null,
+  learningObjectivesNine: null,
+  learningObjectivesTen: null,
+  loadingGeneratedPersonalNotes: true,
+
+  detailedPersonalizedNote: null,
+  loadingDetailedPersonalizedNote: true,
 };
 
 export default function (state = initialState, action) {
@@ -123,6 +155,122 @@ export default function (state = initialState, action) {
         ...state,
         loadingIndividualChatSessions: true,
         careerBuddyStarted: false,
+      };
+    case SUBJECT_FETCH_SUCCESS:
+      return {
+        ...state,
+        subjects: payload,
+        loading: false,
+      };
+    case SUBJECT_FETCH_FAIL:
+      return {
+        ...state,
+        error: payload,
+      };
+    case START_PERSONALIZED_STUDY_SUCCESS:
+      return {
+        ...state,
+        personalStudyID: payload.id,
+        loading: false,
+      };
+    case START_PERSONALIZED_STUDY_FAIL:
+      return {
+        ...state,
+        error: payload,
+      };
+    case GENERATED_PERSONAL_NOTE_SUCCESS:
+      return {
+        ...state,
+        generatingPersonalizedLearning: false,
+        introduction: payload.introduction,
+        // introduction: payload.introduction,
+        learningObjectives: payload.learning_objectives,
+      };
+    case GENERATED_PERSONAL_NOTE_FAILED:
+      return {
+        ...state,
+        error: payload,
+      };
+    case FETCH_GENERATED_PERSONAL_NOTES_SUCCESS:
+      return {
+        ...state,
+        introduction: payload.introduction,
+        learningObjectives: payload.learning_objectives,
+        loadingGeneratedPersonalNotes: false,
+      };
+    case FETCH_GENERATED_PERSONAL_NOTES_FAIL:
+      return {
+        ...state,
+        error: payload,
+      };
+    case FLUSH_ALL_AI_SUCCESS:
+      return {
+        ...state,
+        explanation: [],
+        error: {},
+        explainatioLoading: true,
+        careerBuddyStarted: false,
+        loadingIndividualChatSessions: true,
+        loadingAllChatSessions: true,
+        individualChatSessions: [],
+        allChatSessions: [],
+        RecommendedCareerTopics: [],
+        loadingRecommendCareerTopics: true,
+        chatSentStatus: false,
+        chatInstanceID: null,
+        UpdatedInstanceID: null,
+        noChatTrigger: false,
+        subjects: [],
+        personalStudyID: {},
+        generatingPersonalizedLearning: true,
+        introduction: null,
+        learningObjectives: null,
+        learningObjectivesOne: null,
+        learningObjectivesTwo: null,
+        learningObjectivesThree: null,
+        learningObjectivesFour: null,
+        learningObjectivesFive: null,
+        learningObjectivesSix: null,
+        learningObjectivesSeven: null,
+        learningObjectivesEight: null,
+        learningObjectivesNine: null,
+        learningObjectivesTen: null,
+        loadingGeneratedPersonalNotes: true,
+      };
+    case FLUSH_ALL_AI_FAIL:
+      return {
+        ...state,
+        error: payload,
+      };
+    case GENERATED_DATAILED_PERSONALIZE_NOTE_SUCCESS:
+      return {
+        ...state,
+        learningObjectivesOne:
+          payload.detailed_learning_body.detailed_learning_objective_1,
+        learningObjectivesTwo:
+          payload.detailed_learning_body.detailed_learning_objective_2,
+        learningObjectivesThree:
+          payload.detailed_learning_body.detailed_learning_objective_3,
+        learningObjectivesFour:
+          payload.detailed_learning_body.detailed_learning_objective_4,
+        learningObjectivesFive:
+          payload.detailed_learning_body.detailed_learning_objective_5,
+        learningObjectivesSix:
+          payload.detailed_learning_body.detailed_learning_objective_6,
+        learningObjectivesSeven:
+          payload.detailed_learning_body.detailed_learning_objective_7,
+        learningObjectivesEight:
+          payload.detailed_learning_body.detailed_learning_objective_8,
+        learningObjectivesNine:
+          payload.detailed_learning_body.detailed_learning_objective_9,
+        learningObjectivesTen:
+          payload.detailed_learning_body.detailed_learning_objective_10,
+        loadingDetailedPersonalizedNote: false,
+      };
+    case GENERATED_DETAILED_PERSONALIZE_NOTE_FAIL:
+      return {
+        ...state,
+        error: payload,
       };
     default:
       return state;
