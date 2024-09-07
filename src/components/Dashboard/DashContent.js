@@ -115,7 +115,7 @@ export function DashContent() {
         <Route path="explanation" element={<ShowExplanation />} />
         <Route path="career-bot" element={<CareerBot />} />
         <Route
-          path="personal-tutor/inner"
+          path="personal-tutor/personal-learning/:id"
           element={<PersonalTutorInnerScreen />}
         />
       </Routes>
