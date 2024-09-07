@@ -19,6 +19,18 @@ import {
   TRIGGER_RELOADING_INDIVIDUAL_CHAT_SESSIONS,
   NO_CHAT_TRIGGER,
   CHAT_SESSION_DELETED,
+  SUBJECT_FETCH_SUCCESS,
+  SUBJECT_FETCH_FAIL,
+  START_PERSONALIZED_STUDY_SUCCESS,
+  START_PERSONALIZED_STUDY_FAIL,
+  GENERATED_PERSONAL_NOTE_SUCCESS,
+  GENERATED_PERSONAL_NOTE_FAILED,
+  FETCH_GENERATED_PERSONAL_NOTES_SUCCESS,
+  FETCH_GENERATED_PERSONAL_NOTES_FAIL,
+  FLUSH_ALL_AI_SUCCESS,
+  FLUSH_ALL_AI_FAIL,
+  GENERATED_DATAILED_PERSONALIZE_NOTE_SUCCESS,
+  GENERATED_DETAILED_PERSONALIZE_NOTE_FAIL,
 } from "./Types";
 
 export const explainAnswer = (prompt) => (dispatch, getState) => {
@@ -154,3 +166,114 @@ export const DeleteChatSession = (id) => (dispatch, getState) => {
       throw err;
     });
 };
+
+export const FetchSelectionSubjectAndTopic = () => (dispatch, getState) => {
+  console.log("This endpoint is being hit");
+
+  return axios
+    .get(`/api/ai/subjects/`, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: SUBJECT_FETCH_SUCCESS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+      dispatch({
+        type: SUBJECT_FETCH_FAIL,
+        payload: { msg: err.response.data, status: err.response.status },
+      });
+    });
+};
+
+export const startPersonalizedStudy =
+  (subject, topic, grade, difficulty) => async (dispatch, getState) => {
+    const body = JSON.stringify({
+      subject,
+      topic,
+      grade,
+      difficulty,
+    });
+
+    try {
+      const res = await axios.post(
+        `/api/ai/generate-learning-content/`,
+        body,
+        tokenConfig(getState)
+      );
+      dispatch({
+        type: START_PERSONALIZED_STUDY_SUCCESS,
+        payload: res.data,
+      });
+      return res.data;
+    } catch (err) {
+      dispatch(returnErrors(err.response.data, err.response.status));
+      dispatch({ type: START_PERSONALIZED_STUDY_FAIL });
+      throw err;
+    }
+  };
+
+export const generatePersonalizedNotes =
+  (id, section_type) => (dispatch, getState) => {
+    const body = JSON.stringify({
+      id,
+      section_type,
+    });
+    return axios
+      .post(`/api/ai/generate-specific-content/`, body, tokenConfig(getState))
+      .then((res) =>
+        dispatch({
+          type: GENERATED_PERSONAL_NOTE_SUCCESS,
+          payload: res.data,
+        })
+      )
+
+      .catch((err) => {
+        dispatch(returnErrors(err.response.data, err.response.status));
+        dispatch({ type: GENERATED_PERSONAL_NOTE_FAILED });
+      });
+  };
+
+export const fetchGeneratedPersonalizedNotes = (id) => (dispatch, getState) => {
+  return axios
+    .get(`/api/ai/generate-learning-content/${id}/`, tokenConfig(getState))
+    .then((res) =>
+      dispatch({
+        type: FETCH_GENERATED_PERSONAL_NOTES_SUCCESS,
+        payload: res.data,
+      })
+    )
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+      dispatch({ type: FETCH_GENERATED_PERSONAL_NOTES_FAIL });
+      throw err;
+    });
+};
+
+export const flushAllAIStates = () => (dispatch) => {
+  try {
+    dispatch({ type: FLUSH_ALL_AI_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: FLUSH_ALL_AI_FAIL,
+    });
+  }
+};
+
+export const GenerateDetailedPersonalizedNotes =
+  (id, learning_objective_key) => (dispatch, getState) => {
+    const body = JSON.stringify({ id, learning_objective_key });
+    return axios
+      .post(`/api/ai/generate-detailed-note/`, body, tokenConfig(getState))
+      .then((res) => {
+        dispatch({
+          type: GENERATED_DATAILED_PERSONALIZE_NOTE_SUCCESS,
+          payload: res.data,
+        });
+      })
+      .catch((err) => {
+        dispatch(returnErrors(err.response.data, err.response.status));
+        dispatch({ type: GENERATED_DETAILED_PERSONALIZE_NOTE_FAIL });
+      });
+  };
