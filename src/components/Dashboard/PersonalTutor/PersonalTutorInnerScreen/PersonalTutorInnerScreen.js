@@ -1,7 +1,4 @@
 import React, { Component } from "react";
-import OpenxpSVG from "../../../../svgs/openxp";
-import MagnifyingLenseSVG from "../../../../svgs/MagnifyingLenseSVG.svg";
-import NotificationBellSVG from "../../../../svgs/NotificationBellSVG.svg";
 import ArrowLeftSVG from "../../../../svgs/ArrowLeftSVG.svg";
 import FileArrowDownloadSVG from "../../../../svgs/FileArrowDownloadSVG.svg";
 import LeftArrowSVG from "../../../../svgs/LeftArrowSVG.svg";
@@ -10,10 +7,13 @@ import SimpleExplanationLoader from "../SimpleExplanationLoader/SimpleExplanatio
 import GiveSimpleExplanation from "../GiveSimpleExplanation/GiveSimpleExplanation";
 import ReferenceImage from "../ReferenceImagePage/ReferenceImagePage";
 import ExplainFurtherPage from "../ExplainFurtherPage/ExplainFurtherPage";
+import PersonalizedLessonComplete from "../PersonalizedLessonComplete/PersonalizedLessonComplete";
+import PersonalLearningNavbar from "../PersonalLearningNavbar/PersonalLearningNavbar";
 import {
   generatePersonalizedNotes,
   fetchGeneratedPersonalizedNotes,
   GenerateDetailedPersonalizedNotes,
+  generatePersonalizedTestQuestion,
 } from "../../../../Actions/AI";
 import PropTypes from "prop-types";
 import { withRouterHooks } from "../../../../withRouters/withRoutersHook";
@@ -37,6 +37,11 @@ class PersonalTutorInnerScreen extends Component {
     learningObjectivesEight: PropTypes.string.isRequired,
     learningObjectivesNine: PropTypes.string.isRequired,
     learningObjectivesTen: PropTypes.string.isRequired,
+    personalStudyID: PropTypes.string.isRequired,
+    selectSubject: PropTypes.string.isRequired,
+    selectedTopic: PropTypes.string.isRequired,
+    generatePersonalizedTestQuestion: PropTypes.func.isRequired,
+    generatedTestID: PropTypes.string.isRequired,
   };
 
   state = {
@@ -67,7 +72,7 @@ class PersonalTutorInnerScreen extends Component {
   };
 
   componentDidMount() {
-    const { location, introduction } = this.props;
+    const { location, introduction, selectSubject, selectedTopic } = this.props;
     const partParts = location.pathname.split("/");
     const id = partParts[partParts.length - 1];
 
@@ -129,7 +134,7 @@ class PersonalTutorInnerScreen extends Component {
         nextContentType = dynamicContent[subIndex + 1];
         nextSubIndex = subIndex + 1;
       } else {
-        // Handle the case when all content has been viewed
+        // If the last content is reached, don't proceed further
         console.log("All content has been viewed");
         return;
       }
@@ -239,10 +244,20 @@ class PersonalTutorInnerScreen extends Component {
     }
   };
 
+  ShowPopup = () => {
+    this.setState({ showCompletionPopup: true });
+  };
+
   render() {
     const { generatingPersonalizedLearning } = this.props;
-    const { contentType, currentIndex, subIndex, inDynamicContent, loading } =
-      this.state;
+    const {
+      contentType,
+      currentIndex,
+      subIndex,
+      inDynamicContent,
+      loading,
+      showCompletionPopup,
+    } = this.state;
 
     let contentToShow;
     if (inDynamicContent) {
@@ -257,32 +272,15 @@ class PersonalTutorInnerScreen extends Component {
     const formattedContentToShow = this.formatContent(contentToShow);
     const renderedContent = this.getContentForSection(contentToShow);
 
+    const isLastDynamicContent =
+      inDynamicContent &&
+      subIndex === contentType[2].dynamic_content.length - 1;
+
     return (
       <div className="flex flex-col w-full min-h-screen">
         {/* Header */}
-        <div className="w-full h-[5.25rem]">
-          <div className="fixed w-full h-[5.25rem] px-[4.5%] flex justify-between shadow-custom items-center z-10 bg-white">
-            <div className="flex h-[2.063rem] items-center gap-[0.813rem]">
-              <OpenxpSVG className="w-[1.813rem] h-full text-purple-primary" />
-              <div className="font-sans h-full font-[700] text-[1.25rem]">
-                Openxp
-              </div>
-            </div>
-            <div className="flex h-[2rem] gap-[2.063rem]">
-              <img
-                className="size-[2rem]"
-                src={MagnifyingLenseSVG}
-                alt="Search"
-              />
-              <img
-                className="size-[2rem]"
-                src={NotificationBellSVG}
-                alt="Notifications"
-              />
-            </div>
-          </div>
-        </div>
-
+        <PersonalLearningNavbar />
+        {showCompletionPopup && <PersonalizedLessonComplete />}
         {/* Main Content */}
         <div className="flex flex-col w-full min-h-screen bg-[#F9FAFB] shadow-custom2 justify-center items-center py-[10rem]">
           <div className="flex flex-col w-[91%] bg-white px-[4%] gap-[1.5rem]">
@@ -343,16 +341,24 @@ class PersonalTutorInnerScreen extends Component {
               >
                 Give me a simpler explanation
               </button>
-              <button
-                className="bg-purple-primary w-[60%] 2xl:w-[40%] text-white h-[5.313rem] font-geist font-[300] text-[2rem] rounded-[0.813rem]"
-                onClick={this.handleNext}
-              >
-                Next
-              </button>
+              {isLastDynamicContent ? (
+                <button
+                  className="bg-purple-primary w-[60%] 2xl:w-[40%] text-white h-[5.313rem] font-geist font-[300] text-[2rem] rounded-[0.813rem]"
+                  onClick={this.ShowPopup}
+                >
+                  Finish
+                </button>
+              ) : (
+                <button
+                  className="bg-purple-primary w-[60%] 2xl:w-[40%] text-white h-[5.313rem] font-geist font-[300] text-[2rem] rounded-[0.813rem]"
+                  onClick={this.handleNext}
+                >
+                  Next
+                </button>
+              )}
             </div>
           </div>
         </div>
-
         {/* Bottom Pagination */}
         <div className="fixed font-geist font-[500] text-[1.5rem] flex gap-[0.438rem] w-[33rem] h-[2.125rem] leading-[1.86rem] z-30 top-[80%] left-0 right-0 bottom-0 m-auto justify-center items-center">
           <img
@@ -395,12 +401,16 @@ const mapStateToProps = (state) => ({
   learningObjectivesNine: state.ai.learningObjectivesNine,
   learningObjectivesTen: state.ai.learningObjectivesTen,
   generatingPersonalizedLearning: state.ai.generatingPersonalizedLearning,
+  personalStudyID: state.ai.personalStudyID,
+  selectSubject: state.ai.selectSubject,
+  selectedTopic: state.ai.selectedTopic,
 });
 
 const mapDispatchToProps = {
   generatePersonalizedNotes,
   fetchGeneratedPersonalizedNotes,
   GenerateDetailedPersonalizedNotes,
+  generatePersonalizedTestQuestion,
 };
 
 export default withRouterHooks(
