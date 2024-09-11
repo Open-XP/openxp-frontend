@@ -14,6 +14,8 @@ import ShowExplanation from "./TestandSimulation/SummaryPage/ShowExplanation";
 import CareerBot from "./CareerBot/CareerBot";
 import PersonalTutorModule from "./PersonalTutor/PersonalTutorModule/PersonalTutorModule";
 import PersonalTutorInnerScreen from "./PersonalTutor/PersonalTutorInnerScreen/PersonalTutorInnerScreen";
+import PersonalizedEvaluation from "./PersonalTutor/PersonalizeEvaluation/PersonalizedEvaluation";
+import EvaluationCorrection from "./PersonalTutor/EvaluationCorrection/EvaluationCorrection";
 
 export function DashContent() {
   return (
@@ -117,6 +119,11 @@ export function DashContent() {
         <Route
           path="personal-tutor/personal-learning/:id"
           element={<PersonalTutorInnerScreen />}
+        />
+        <Route path="evaluation/:id" element={<PersonalizedEvaluation />} />
+        <Route
+          path="evaluation/correction"
+          element={<EvaluationCorrection />}
         />
       </Routes>
     </div>
