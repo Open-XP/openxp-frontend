@@ -8,6 +8,7 @@ import {
   startPersonalizedStudy,
   generatePersonalizedNotes,
   flushAllAIStates,
+  generatePersonalizedTestQuestion,
 } from "../../../../Actions/AI";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -20,6 +21,7 @@ class PersonalTutorModule extends Component {
     personalStudyID: PropTypes.object.isRequired,
     navigate: PropTypes.func.isRequired,
     flushAllAIStates: PropTypes.func.isRequired,
+    generatePersonalizedTestQuestion: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -128,19 +130,12 @@ class PersonalTutorModule extends Component {
           if (data !== undefined && data !== null) {
             console.log("This is getting in");
             this.props.navigate(`personal-learning/${data.id}`);
-          }
-          if (data.id) {
-            this.props
-              .generatePersonalizedNotes(data.id, "introduction")
-              .then(() => {
-                // Add a delay before triggering the second request
-                setTimeout(() => {
-                  this.props.generatePersonalizedNotes(
-                    data.id,
-                    "learning_objectives"
-                  );
-                }, 1000); // Delay of 1 second (1000 milliseconds)
-              });
+            this.props.generatePersonalizedTestQuestion(
+              selectedSubject.name,
+              selectedTopic.name,
+              "5",
+              selectedDifficulty
+            );
           }
         });
     }
@@ -379,6 +374,7 @@ const mapDispatchToProps = {
   startPersonalizedStudy,
   generatePersonalizedNotes,
   flushAllAIStates,
+  generatePersonalizedTestQuestion,
 };
 
 export default withRouterHooks(
