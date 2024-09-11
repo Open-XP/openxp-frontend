@@ -42,3 +42,36 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+.radio-custom {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #667085;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+
+.radio-custom:checked {
+  background-color: white;
+  border-color: #2e0999;
+}
+
+.radio-custom:checked::before {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background-color: #2e0999;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.radio-custom:focus {
+  outline: none;
+  box-shadow: 0 0 0 0 rgba(46, 9, 153, 0.5);
+}
