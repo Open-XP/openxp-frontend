@@ -27,6 +27,16 @@ import {
   FLUSH_ALL_AI_FAIL,
   GENERATED_DATAILED_PERSONALIZE_NOTE_SUCCESS,
   GENERATED_DETAILED_PERSONALIZE_NOTE_FAIL,
+  PERSONALIZED_TEST_GENERATED_SUCCESSS,
+  PERSONALIZED_TEST_GENERATED_FAIL,
+  FETCH_GENERATED_PERSONALIZED_TEST_SUCCESS,
+  FETCH_GENERATED_PERSONALIZED_TEST_FAIL,
+  SUBMIT_PERSONALIZED_TEST_ANSWER_SUCCESS,
+  SUBMIT_PERSONALIZED_TEST_ANSWER_FAIL,
+  FETCH_SIMULATED_USER_TEST_SCORE_SUCCESS,
+  SIMULATED_TEST_COMPLETED_SUCCESS,
+  SIMULATED_TEST_COMPLETED_FAIL,
+  FETCH_SIMULATED_USER_TEST_SCORE_FAIL,
 } from "../Actions/Types";
 
 const initialState = {
@@ -61,9 +71,15 @@ const initialState = {
   learningObjectivesNine: null,
   learningObjectivesTen: null,
   loadingGeneratedPersonalNotes: true,
-
+  generatedTestOption: null,
+  generatedTestquestionID: null,
+  generatedTestQuestionID: null,
   detailedPersonalizedNote: null,
   loadingDetailedPersonalizedNote: true,
+  completedSimulatedTestMesssage: null,
+  simulatedTestScore: null,
+  simulatedTestCorrect: null,
+  simulatedTestIncorrect: null,
 };
 
 export default function (state = initialState, action) {
@@ -171,6 +187,8 @@ export default function (state = initialState, action) {
       return {
         ...state,
         personalStudyID: payload.id,
+        selectSubject: payload.subject,
+        selectedTopic: payload.topic,
         loading: false,
       };
     case START_PERSONALIZED_STUDY_FAIL:
@@ -268,6 +286,61 @@ export default function (state = initialState, action) {
         loadingDetailedPersonalizedNote: false,
       };
     case GENERATED_DETAILED_PERSONALIZE_NOTE_FAIL:
+      return {
+        ...state,
+        error: payload,
+      };
+    case PERSONALIZED_TEST_GENERATED_SUCCESSS:
+      return {
+        ...state,
+        generatedTestID: payload.test_instance.id,
+        generatedTestScore: payload.test_instance.score,
+      };
+    case PERSONALIZED_TEST_GENERATED_FAIL:
+      return {
+        ...state,
+        error: payload,
+      };
+    case FETCH_GENERATED_PERSONALIZED_TEST_SUCCESS:
+      return {
+        ...state,
+        allGeneratedTests: payload,
+      };
+    case FETCH_GENERATED_PERSONALIZED_TEST_FAIL:
+      return {
+        ...state,
+        error: payload,
+      };
+    case SUBMIT_PERSONALIZED_TEST_ANSWER_SUCCESS:
+      return {
+        ...state,
+        generatedTestOption: payload.selected_option,
+        generatedTestquestionID: payload.test_instance,
+        generatedTestQuestionID: payload.question,
+      };
+    case SUBMIT_PERSONALIZED_TEST_ANSWER_FAIL:
+      return {
+        ...state,
+        error: payload,
+      };
+    case SIMULATED_TEST_COMPLETED_SUCCESS:
+      return {
+        ...state,
+        completedSimulatedTestMesssage: payload.message,
+      };
+    case SIMULATED_TEST_COMPLETED_FAIL:
+      return {
+        ...state,
+        error: payload,
+      };
+    case FETCH_SIMULATED_USER_TEST_SCORE_SUCCESS:
+      return {
+        ...state,
+        simulatedTestScore: payload.score,
+        simulatedTestCorrect: payload.correct_questions,
+        simulatedTestIncorrect: payload.incorrect_questions,
+      };
+    case FETCH_SIMULATED_USER_TEST_SCORE_FAIL:
       return {
         ...state,
         error: payload,
