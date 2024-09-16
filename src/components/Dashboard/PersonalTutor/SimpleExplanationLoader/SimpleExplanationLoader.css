@@ -1,0 +1,41 @@
+.circle {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background-color: #d9d9d9;
+  animation: growAndShrink 1s ease-in-out infinite;
+}
+
+@keyframes growAndShrink {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+}
+
+.animation-delay-1 {
+  animation-delay: 0s;
+}
+
+.animation-delay-2 {
+  animation-delay: 0.1s;
+}
+
+.animation-delay-3 {
+  animation-delay: 0.2s;
+}
+
+.animation-delay-4 {
+  animation-delay: 0.3s;
+}
+
+.animation-delay-5 {
+  animation-delay: 0.4s;
+}
+
+.animation-delay-6 {
+  animation-delay: 0.5s;
+}
