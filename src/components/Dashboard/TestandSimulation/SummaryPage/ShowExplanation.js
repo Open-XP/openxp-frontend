@@ -13,7 +13,6 @@ import DownloadIcon from "../../../../icons/downloadbutton.png";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ReturnHomeButton from "../../../../icons/ReturnHomeButton.png";
-import { Link } from "react-router-dom";
 import html2canvas from "html2canvas";
 
 class ShowExplanation extends Component {
@@ -193,7 +192,6 @@ class ShowExplanation extends Component {
                   Correct Answer ({question.answer}):{" "}
                   {question[`option_${question.answer}`]}
                 </div>
-
                 {visibility[index] && (
                   <div className="flex flex-col gap-[0.5rem]">
                     {loadingStatus[index] ? (
