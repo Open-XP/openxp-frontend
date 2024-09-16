@@ -11,6 +11,7 @@ class EvaluationScore extends Component {
     simulatedTestScore: PropTypes.string.isRequired,
     fetchSimulatedTestUserScore: PropTypes.func.isRequired,
     id: PropTypes.string.isRequired,
+    navigate: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -30,6 +31,15 @@ class EvaluationScore extends Component {
         comment: "Good job! Keep going and read more to improve even further.",
       };
     }
+  };
+
+  handleRedirectToAnswerAndExplanation = () => {
+    const { id } = this.props;
+    this.props.navigate(`/dashboard/evaluation-report/${id}`);
+  };
+
+  handleRedirectToHome = () => {
+    this.props.navigate("/dashboard");
   };
 
   render() {
@@ -56,10 +66,16 @@ class EvaluationScore extends Component {
               </div>
             </div>
             <div className="flex w-full 2xl:h-[8vh] h-[6vh] justify-center gap-[2vw]">
-              <button className="w-[30%] h-full rounded-[0.625rem] bg-purple-primary text-white text-[1.3vw]">
+              <button
+                onClick={this.handleRedirectToAnswerAndExplanation}
+                className="w-[30%] h-full rounded-[0.625rem] bg-purple-primary text-white text-[1.3vw]"
+              >
                 Evaluation Report
               </button>
-              <button className="w-[30%] h-full rounded-[0.625rem] border-[1px] border-purple-primary text-[1.5vw]">
+              <button
+                onClick={this.handleRedirectToHome}
+                className="w-[30%] h-full rounded-[0.625rem] border-[1px] border-purple-primary text-[1.5vw]"
+              >
                 Return Home
               </button>
             </div>
