@@ -339,6 +339,7 @@ export default function (state = initialState, action) {
         simulatedTestScore: payload.score,
         simulatedTestCorrect: payload.correct_questions,
         simulatedTestIncorrect: payload.incorrect_questions,
+        loading: false,
       };
     case FETCH_SIMULATED_USER_TEST_SCORE_FAIL:
       return {
