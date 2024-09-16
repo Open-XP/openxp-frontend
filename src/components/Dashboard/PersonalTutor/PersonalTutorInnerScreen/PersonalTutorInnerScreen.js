@@ -18,6 +18,7 @@ import {
 import PropTypes from "prop-types";
 import { withRouterHooks } from "../../../../withRouters/withRoutersHook";
 import { connect } from "react-redux";
+import { parseMathSolution } from "../../../../Utils/Utils";
 
 class PersonalTutorInnerScreen extends Component {
   static propTypes = {
@@ -259,6 +260,7 @@ class PersonalTutorInnerScreen extends Component {
       showCompletionPopup,
     } = this.state;
 
+    // Determine current section (static or dynamic)
     let contentToShow;
     if (inDynamicContent) {
       contentToShow = contentType[2].dynamic_content[subIndex];
@@ -269,8 +271,27 @@ class PersonalTutorInnerScreen extends Component {
           : contentType[currentIndex].dynamic_content[subIndex];
     }
 
+    // Format the content title
     const formattedContentToShow = this.formatContent(contentToShow);
     const renderedContent = this.getContentForSection(contentToShow);
+    console.log("Rendered content:", renderedContent);
+    const isLearningObjective = contentToShow.startsWith("learning_objectives");
+
+    // Determine total sections (both static and dynamic sections)
+    const totalStaticSections = contentType.length - 1; // 'introduction' and 'learning_objectives'
+    const totalDynamicSections = contentType[2].dynamic_content.length;
+    const totalSections = totalStaticSections + totalDynamicSections;
+
+    // Calculate the current progress
+    let currentProgress;
+    if (inDynamicContent) {
+      currentProgress = totalStaticSections + subIndex + 1; // Dynamic section progress
+    } else {
+      currentProgress = currentIndex + 1; // Static section progress
+    }
+
+    // Calculate progress percentage
+    const progressPercentage = (currentProgress / totalSections) * 100;
 
     const isLastDynamicContent =
       inDynamicContent &&
@@ -281,9 +302,10 @@ class PersonalTutorInnerScreen extends Component {
         {/* Header */}
         <PersonalLearningNavbar />
         {showCompletionPopup && <PersonalizedLessonComplete />}
+
         {/* Main Content */}
         <div className="flex flex-col w-full min-h-screen bg-[#F9FAFB] shadow-custom2 justify-center items-center py-[10rem]">
-          <div className="flex flex-col w-[91%] bg-white px-[4%] gap-[1.5rem]">
+          <div className="flex flex-col w-[91%] bg-white px-[4%] py-[2%] gap-[1.5rem]">
             {/* Lesson Header */}
             <div className="flex flex-col w-full item-center">
               <img className="size-[2.625rem]" src={ArrowLeftSVG} alt="Back" />
@@ -307,11 +329,14 @@ class PersonalTutorInnerScreen extends Component {
                   className="flex w-full h-[0.688rem] rounded-[3.563rem]"
                   style={{ background: "rgba(40, 18, 102, 0.23)" }}
                 >
-                  <div className="w-[10%] rounded-[3.563rem] bg-purple-primary"></div>
+                  <div
+                    className="rounded-[3.563rem] bg-purple-primary"
+                    style={{ width: `${progressPercentage}%` }}
+                  ></div>
                 </div>
               </div>
               <div className="font-SFPro font-[700] text-[1.375rem] leading-[1.641rem] text-purple-primary">
-                1/9
+                {currentProgress}/{totalSections}
               </div>
             </div>
 
@@ -322,16 +347,12 @@ class PersonalTutorInnerScreen extends Component {
             <div className="font-[400] font-SFPro text-[2rem] leading-[2.387rem]">
               {loading || generatingPersonalizedLearning ? (
                 <SimpleExplanationLoader />
-              ) : (
+              ) : isLearningObjective ? (
                 renderedContent
+              ) : (
+                parseMathSolution(renderedContent)
               )}
             </div>
-
-            {/* Additional Components */}
-            {/* <SimpleExplanationLoader />
-            <GiveSimpleExplanation />
-            <ReferenceImage />
-            <ExplainFurtherPage /> */}
 
             {/* Buttons */}
             <div className="flex flex-col gap-[0.625rem]">
@@ -359,6 +380,7 @@ class PersonalTutorInnerScreen extends Component {
             </div>
           </div>
         </div>
+
         {/* Bottom Pagination */}
         <div className="fixed font-geist font-[500] text-[1.5rem] flex gap-[0.438rem] w-[33rem] h-[2.125rem] leading-[1.86rem] z-30 top-[80%] left-0 right-0 bottom-0 m-auto justify-center items-center">
           <img
