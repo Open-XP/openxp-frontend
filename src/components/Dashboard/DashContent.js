@@ -6,7 +6,7 @@ import DashboardNavBar from "./DashBoardSideBar/DashboardNavBar";
 import Void from "./DashBoardSideBar/void";
 import MockExam from "../../components/Dashboard/TestandSimulation/MockExams/MockExam";
 import Evaluation from "../../components/Dashboard/TestandSimulation/EvaluationScreen/Evaluation";
-import SummaryPage from "./TestandSimulation/SummaryPage/SummaryPage";
+// import SummaryPage from "./TestandSimulation/SummaryPage/SummaryPage";
 import SchedulePlan from "./SchedulePlan/SchedulePlan";
 import AddSchedule from "./SchedulePlan/ScheduleComponent/AddSchedule";
 import _SummaryPage from "./TestandSimulation/SummaryPage/_SummaryPage";
@@ -112,7 +112,7 @@ export function DashContent() {
           }
         />
         <Route path="mock-exam/evaluation/:id" element={<Evaluation />} />
-        <Route path="summary" element={<SummaryPage />} />
+        {/* <Route path="summary" element={<SummaryPage />} /> */}
         <Route path="_summary" element={<_SummaryPage />} />
         <Route path="explanation" element={<ShowExplanation />} />
         <Route path="career-bot" element={<CareerBot />} />
@@ -122,7 +122,7 @@ export function DashContent() {
         />
         <Route path="evaluation/:id" element={<PersonalizedEvaluation />} />
         <Route
-          path="evaluation/correction"
+          path="evaluation-report/:id"
           element={<EvaluationCorrection />}
         />
       </Routes>
