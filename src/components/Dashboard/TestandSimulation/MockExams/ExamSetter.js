@@ -91,7 +91,7 @@ class ExamSetter extends Component {
     const isSelectionComplete = selectedSubject && selectedYear;
 
     return (
-      <div className="flex w-screen h-screen fixed bg-gray-300 bg-opacity-50 drop-shadow-2xl backdrop-blur-sm justify-center -mt-[3.2rem]">
+      <div className="flex  shrink-0 h-screen absolute bg-gray-300/[30%] drop-shadow-2xl backdrop-blur-sm justify-center -mt-[3.2rem]">
         <div className="flex w-[30rem] h-[40rem] 2xl:w-[46rem] 2xl:h-[35.938rem] flex-col justify-center bg-white items-center gap-4 mt-[6rem]">
           <div className="flex w-[80%] justify-between items-center">
             <div className="flex items-center text-[2rem] font-[600]">
