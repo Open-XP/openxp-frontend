@@ -180,7 +180,7 @@ class SideBar extends Component {
             ({ id, title, subtitle, Icon, isImage, Arrow, rotate, link }) => (
               <List key={id}>
                 <Accordion open={activeIndex === id}>
-                  <ListItem className="flex flex-col">
+                  <ListItem className="flex flex-col z-10">
                     <AccordionHeader
                       // Handle the toggle for all headers
                       onClick={() => this.handleToggle(id, title)}
