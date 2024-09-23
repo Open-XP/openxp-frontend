@@ -18,7 +18,7 @@ class PersonalizedLessonComplete extends Component {
   render() {
     return (
       <div className="w-full h-full bg-[#00000033]/[20%] fixed flex justify-center items-center">
-        <div className="flex flex-col justify-center items-center 2xl:h-[70vh] w-[50vw] h-[50vh] bg-white">
+        <div className="flex flex-col justify-center items-center 2xl:h-[70vh] w-[50vw] h-[50vh] bg-white z-20">
           <div className="w-[90%] h-[80%] flex justify-center items-center flex-col gap-[2vw]">
             <div className="flex flex-col items-center">
               <img
