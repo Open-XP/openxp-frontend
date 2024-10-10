@@ -19,7 +19,7 @@ const Footer = () => {
       <div className="flex mt-[8rem] gap-[5rem] text-white font-sans">
         <div className="flex flex-col gap-3">
           <div className="w-107.625rem] h-[2.063rem] font-[700] text-[1.5rem]  text-white">
-            Openpx
+            Openxp
           </div>
           <div className="flex gap-[1rem]">
             <img
